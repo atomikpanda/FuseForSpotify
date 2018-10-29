@@ -8,10 +8,14 @@
 
 import Foundation
 import ObjectMapper
+import Alamofire
+import AlamofireObjectMapper
 
 /***
  See https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/ for more info.
  ***/
+
+private let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
 class TrackFeatures: Mappable {
     var trackId: String?
@@ -34,5 +38,26 @@ class TrackFeatures: Mappable {
         tempo <- map["tempo"]
         valence <- map["valence"]
         trackUri <- map["uri"]
+    }
+    
+    class func loadFeatures(for tracks: [Track], completion: @escaping () -> ()) {
+        var ids: [String] = []
+        for track in tracks {
+            guard let id = track.id else { continue }
+            ids.append(id)
+        }
+        let params = ["ids": ids.joined(separator: ",")]
+        
+        Alamofire.request("https://api.spotify.com/v1/audio-features", method: .get, parameters: params, encoding: URLEncoding(destination: .queryString), headers: appDelegate.authorizationHeaders).responseArray(queue: nil, keyPath: "audio_features", context: nil, completionHandler:
+            { (response: DataResponse<[TrackFeatures]>) in
+                let features: [TrackFeatures]? = response.result.value
+                
+                if let features = features {
+                    for (i, feature) in features.enumerated() {
+                        tracks[i].features = feature
+                    }
+                    completion()
+                }
+        })
     }
 }
