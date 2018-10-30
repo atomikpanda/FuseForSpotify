@@ -12,22 +12,35 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     
     
     @IBOutlet weak var tableView: UITableView!
+    var playlists: [Playlist] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.dataSource = self
         tableView.delegate = self
+        
+        playlists.removeAll()
+        Playlist.loadUserPlaylists { (paging, playlists) in
+            if let loadedPlaylists = playlists {
+                self.playlists.append(contentsOf: loadedPlaylists)
+//                if self.playlists.count == paging.total ?? 0 {
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+//                }
+            }
+        }
     }
     
     // MARK: - UITableView Data Source
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return playlists.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell", for: indexPath) as! PlaylistTableViewCell
-        
+        cell.playlistTitleLabel.text = playlists[indexPath.row].name
         return cell
     }
 
