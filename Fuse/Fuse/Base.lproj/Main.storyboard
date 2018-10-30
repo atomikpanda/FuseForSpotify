@@ -58,7 +58,8 @@
                     </view>
                     <navigationItem key="navigationItem" title="Welcome to Fuse for Spotify" id="6Sn-6i-JiL"/>
                     <connections>
-                        <segue destination="75o-Yb-Oeo" kind="show" id="EnR-dc-7f4"/>
+                        <segue destination="75o-Yb-Oeo" kind="show" identifier="toPlaylistsNoAnimate" animates="NO" id="EnR-dc-7f4"/>
+                        <segue destination="75o-Yb-Oeo" kind="show" identifier="toPlaylists" id="hzc-P7-Jf0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -73,9 +74,48 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="spZ-6V-Iyb">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="spZ-6V-Iyb">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="playlistCell" rowHeight="44" id="s8x-Uj-zgV" customClass="PlaylistTableViewCell" customModule="Fuse" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="s8x-Uj-zgV" id="L2q-6v-rhA">
+                                            <rect key="frame" x="0.0" y="0.0" width="342" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="playlistTitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sfX-MX-02B">
+                                                    <rect key="frame" x="10" y="5" width="239.5" height="34"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="tracks" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gG3-06-OIF">
+                                                    <rect key="frame" x="254.5" y="5" width="82.5" height="34"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" name="secondary"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="sfX-MX-02B" firstAttribute="leading" secondItem="L2q-6v-rhA" secondAttribute="leading" constant="10" id="1OJ-jw-AM5"/>
+                                                <constraint firstAttribute="bottom" secondItem="gG3-06-OIF" secondAttribute="bottom" constant="5" id="5ca-3B-Nwh"/>
+                                                <constraint firstAttribute="bottom" secondItem="sfX-MX-02B" secondAttribute="bottom" constant="5" id="ME3-n2-TKe"/>
+                                                <constraint firstAttribute="trailing" secondItem="gG3-06-OIF" secondAttribute="trailing" constant="5" id="QQj-J2-D8n"/>
+                                                <constraint firstItem="gG3-06-OIF" firstAttribute="top" secondItem="L2q-6v-rhA" secondAttribute="top" constant="5" id="V88-Ft-KF9"/>
+                                                <constraint firstItem="gG3-06-OIF" firstAttribute="leading" secondItem="sfX-MX-02B" secondAttribute="trailing" constant="5" id="aPs-3v-JCG"/>
+                                                <constraint firstItem="sfX-MX-02B" firstAttribute="top" secondItem="L2q-6v-rhA" secondAttribute="top" constant="5" id="bcT-C1-4t7"/>
+                                                <constraint firstItem="sfX-MX-02B" firstAttribute="width" secondItem="L2q-6v-rhA" secondAttribute="width" multiplier="0.7" id="gDP-vM-vKo"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" name="cell"/>
+                                        <connections>
+                                            <outlet property="playlistTitleLabel" destination="sfX-MX-02B" id="Jup-7d-SVG"/>
+                                            <outlet property="tracksLabel" destination="gG3-06-OIF" id="1Mc-sb-PgA"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" name="primary"/>
@@ -88,13 +128,20 @@
                         <viewLayoutGuide key="safeArea" id="67Y-u6-5eK"/>
                     </view>
                     <navigationItem key="navigationItem" title="Your Playlists" id="6qL-PU-qSE">
-                        <barButtonItem key="leftBarButtonItem" title="Logout" id="nfa-9p-1BC"/>
+                        <barButtonItem key="leftBarButtonItem" title="Logout" id="nfa-9p-1BC">
+                            <connections>
+                                <action selector="logout:" destination="75o-Yb-Oeo" id="OeX-x2-jmy"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="fc6-lG-iWn" kind="show" id="kMo-iW-uqE"/>
+                        <outlet property="tableView" destination="spZ-6V-Iyb" id="Azb-Uy-ZCM"/>
+                        <segue destination="fc6-lG-iWn" kind="show" identifier="toTracks" id="kMo-iW-uqE"/>
+                        <segue destination="782-gw-k2O" kind="unwind" identifier="unwindToWelcome" unwindAction="unwindToWelcome:" id="2Bc-46-YqW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="45n-mw-CQF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="782-gw-k2O" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1761" y="123"/>
         </scene>
@@ -109,7 +156,7 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="WAH-05-uGD">
                                 <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                 <items>
-                                    <barButtonItem title="Item" systemItem="edit" id="gq1-bD-oXL"/>
+                                    <barButtonItem systemItem="edit" id="gq1-bD-oXL"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="hLT-Tq-2GL"/>
                                     <barButtonItem title="Operation" id="rmZ-9C-WxN"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="hsq-cP-T3q"/>
@@ -138,7 +185,7 @@
                         <barButtonItem key="rightBarButtonItem" title="Stats" id="kJc-6m-Uxb"/>
                     </navigationItem>
                     <connections>
-                        <segue destination="rZs-WL-69F" kind="show" id="QkB-GG-4lk"/>
+                        <segue destination="rZs-WL-69F" kind="show" identifier="toStats" id="QkB-GG-4lk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rgS-Ql-Niv" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -196,6 +243,9 @@
     <resources>
         <image name="splash" width="5184" height="3456"/>
         <image name="splashIcon" width="2048" height="2048"/>
+        <namedColor name="cell">
+            <color red="0.10980392156862745" green="0.10980392156862745" blue="0.11372549019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="primary">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -203,4 +253,7 @@
             <color red="0.11372549019607843" green="0.72549019607843135" blue="0.32941176470588235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="EnR-dc-7f4"/>
+    </inferredMetricsTieBreakers>
 </document>

@@ -11,4 +11,5 @@ target 'Fuse' do
   pod 'AlamofireObjectMapper', '~> 5.0'
   pod 'Alamofire', '~> 4.7'
   pod 'OAuthSwiftAlamofire'
+  pod 'SwiftyJSON', '~> 4.0'
 end

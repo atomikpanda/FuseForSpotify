@@ -8,15 +8,32 @@
 
 import UIKit
 
-class PlaylistListViewController: UIViewController {
-
+class PlaylistListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    
+    @IBOutlet weak var tableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        tableView.dataSource = self
+        tableView.delegate = self
     }
     
+    // MARK: - UITableView Data Source
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell", for: indexPath) as! PlaylistTableViewCell
+        
+        return cell
+    }
 
+    @IBAction func logout(_ sender: AnyObject) {
+       performSegue(withIdentifier: "unwindToWelcome", sender: self)
+    }
     /*
     // MARK: - Navigation
 

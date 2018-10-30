@@ -10,6 +10,7 @@ import Foundation
 import ObjectMapper
 import Alamofire
 import AlamofireObjectMapper
+import SwiftyJSON
 
 /***
  See https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/ for more info.
@@ -40,7 +41,7 @@ class TrackFeatures: Mappable {
         trackUri <- map["uri"]
     }
     
-    class func loadFeatures(for tracks: [Track], completion: @escaping () -> ()) {
+    class func loadFeatures(for tracks: [Track], completion: @escaping ([Track]) -> ()) {
         var ids: [String] = []
         for track in tracks {
             guard let id = track.id else { continue }
@@ -48,16 +49,25 @@ class TrackFeatures: Mappable {
         }
         let params = ["ids": ids.joined(separator: ",")]
         
-        Alamofire.request("https://api.spotify.com/v1/audio-features", method: .get, parameters: params, encoding: URLEncoding(destination: .queryString), headers: nil).responseArray(queue: nil, keyPath: "audio_features", context: nil, completionHandler:
-            { (response: DataResponse<[TrackFeatures]>) in
-                let features: [TrackFeatures]? = response.result.value
+        _ = appDelegate.oauthswift!.client.get("https://api.spotify.com/v1/audio-features", parameters: params, headers: nil, success: { (response) in
+            
+            do {
+                let rootObj = try JSON(data: response.data)
                 
-                if let features = features {
-                    for (i, feature) in features.enumerated() {
-                        tracks[i].features = feature
+                if let audioFeatures = rootObj["audio_features"].array {
+                    for (i, feature) in audioFeatures.enumerated() {
+                        guard let featureJson = feature.dictionaryObject else { continue }
+                        tracks[i].features = TrackFeatures(JSON: featureJson)
                     }
-                    completion()
+                    completion(tracks)
                 }
-        })
+            } catch {
+                print("JSON ERROR: \(error.localizedDescription)")
+            }
+            
+        }) { (error) in
+            print("err: \(error.localizedDescription)")
+        }
+        
     }
 }

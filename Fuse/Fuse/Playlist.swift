@@ -12,6 +12,7 @@ import Alamofire
 import AlamofireObjectMapper
 import OAuthSwiftAlamofire
 import OAuthSwift
+import SwiftyJSON
 
 /***
  See https://developer.spotify.com/documentation/web-api/reference/playlists/get-playlist/
@@ -43,27 +44,40 @@ class Playlist: Mappable {
         
     }
     
-    class func loadUserPlaylists(loaded: @escaping (Paging, [Playlist]?) -> ()) {
+    class func loadUserPlaylists(loaded: @escaping (Paging, [Playlist]?) -> Void) {
         // TODO: Implement loading playlists from /me/playlists
         // maybe use a closure as a param for this method to handle each paging request?
-        
-        Alamofire.request("https://api.spotify.com/v1/me/playlists", method: .get, parameters: ["limit": "50", "offset": "0"],
-                          encoding: URLEncoding(destination: .queryString),
-                          headers: nil).responseObject(queue: nil, keyPath: nil, context: nil, completionHandler:
-            { (response: DataResponse<Paging>) in
-                let paging: Paging? = response.result.value
-                var playlists: [Playlist]? = []
-                if let items = paging?.items as? [[String: Any]] {
+
+        _ = appDelegate.oauthswift!.client.get("https://api.spotify.com/v1/me/playlists", parameters: ["limit": "50", "offset": "0"], headers: nil, success: { response in
+
+            do {
+                let rootObj = try JSON(data: response.data)
+
+                // Get our paging object
+                if let rootDict = rootObj.dictionaryObject,
+                    let paging = Paging(JSON: rootDict) {
+                    
+                    // Make sure we have items in the paging object
+                    guard let items = paging.items as? [[String: Any]] else { return }
+
+                    var playlists: [Playlist] = []
+                    
+                    // Get each playlist item from our items and convert it
                     for item in items {
-                        if let plist = Playlist(JSON: item) {
-                            playlists?.append(plist)
-                        }
+                        guard let plist = Playlist(JSON: item) else { continue }
+                        playlists.append(plist)
                     }
-                }
-                
-                if let paging = paging, let playlists = playlists {
+
+                    // Notify callback
                     loaded(paging, playlists)
                 }
-        })
+
+            } catch {
+                print("JSON ERROR: \(error.localizedDescription)")
+            }
+
+        }) { error in
+            print("OAUTH Request Error: \(error.localizedDescription)")
+        }
     }
 }

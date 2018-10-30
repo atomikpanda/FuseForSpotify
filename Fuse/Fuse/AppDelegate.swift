@@ -16,31 +16,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var oauthswift: OAuth2Swift?
-    
+    var sessionManager = SessionManager.default
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        oauthswift = OAuth2Swift(
+        oauthswift = OAuth2SwiftWorkaround(
             consumerKey:    "b798e6bd7c154a6497778e08d58bd938",
             consumerSecret: "d4227806dfdf497ca1934511abd31178",
             authorizeUrl:   "https://accounts.spotify.com/authorize",
-            responseType:   "token"
+            accessTokenUrl: "https://accounts.spotify.com/api/token",
+            responseType:   "code"
         )
         
         
-        if let oauthToken = UserDefaults.standard.value(forKey: "oauthToken") as? String,
-            let oauthTokenSecret = UserDefaults.standard.value(forKey: "oauthTokenSecret") as? String {
-            
+        if let oauthToken = UserDefaults.standard.value(forKey: "oauthToken") as? String {
             oauthswift?.client.credential.oauthToken = oauthToken
+        }
+        if  let oauthTokenSecret = UserDefaults.standard.value(forKey: "oauthTokenSecret") as? String {
             oauthswift?.client.credential.oauthTokenSecret = oauthTokenSecret
-            
+        }
+        if  let oauthRefreshToken = UserDefaults.standard.value(forKey: "oauthRefreshToken") as? String {
+            oauthswift?.client.credential.oauthRefreshToken = oauthRefreshToken
         }
         
-        SessionManager.default.adapter = oauthswift?.requestAdapter
-        SessionManager.default.retrier = oauthswift?.requestAdapter
+        sessionManager.adapter = oauthswift?.requestAdapter
+        sessionManager.retrier = oauthswift?.requestAdapter
         
-        
-        
+        UIView.appearance().tintColor = UIColor(named: "secondary")
+        UITableView.appearance().backgroundColor = UIColor(named: "primary")
+
         return true
     }
 
@@ -98,10 +102,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
             UserDefaults.standard.set(credential.oauthToken, forKey: "oauthToken")
             UserDefaults.standard.set(credential.oauthTokenSecret, forKey: "oauthTokenSecret")
+            UserDefaults.standard.set(credential.oauthRefreshToken, forKey: "oauthRefreshToken")
             
         }
     }
     
+    class OAuth2SwiftWorkaround: OAuth2Swift {
+        override func renewAccessToken(withRefreshToken refreshToken: String, parameters: OAuthSwift.Parameters?, headers: OAuthSwift.Headers?, success: @escaping OAuthSwift.TokenSuccessHandler, failure: OAuthSwift.FailureHandler?) -> OAuthSwiftRequestHandle? {
+            
+            print("reset access_token")
+            client.credential.oauthToken = ""
+            client.credential.oauthTokenExpiresAt = nil
+            
+            return super.renewAccessToken(withRefreshToken: client.credential.oauthRefreshToken, parameters: parameters, headers: headers, success: { (credential, response, successParameters) in
+                
+                UserDefaults.standard.set(credential.oauthToken, forKey: "oauthToken")
+                UserDefaults.standard.set(credential.oauthTokenSecret, forKey: "oauthTokenSecret")
+                UserDefaults.standard.set(credential.oauthRefreshToken, forKey: "oauthRefreshToken")
+                
+                success(credential, response, successParameters)
+            }, failure: failure)
+        }
+    }
 
 }
-
