@@ -11,6 +11,7 @@ import ObjectMapper
 import Alamofire
 import AlamofireObjectMapper
 import SwiftyJSON
+import OAuthSwift
 
 /***
  See https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/ for more info.
@@ -66,7 +67,10 @@ class TrackFeatures: Mappable {
             }
             
         }) { (error) in
-            print("err: \(error.localizedDescription)")
+            appDelegate.oauthErrorHandler(error: error as! OAuthSwiftError) {
+                // Retry this same request after renewal
+                loadFeatures(for: tracks, completion: completion)
+            }
         }
         
     }

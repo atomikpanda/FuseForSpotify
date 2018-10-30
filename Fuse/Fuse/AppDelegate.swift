@@ -69,5 +69,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         oauthswift?.client.credential.save()
     }
+    
+    func oauthErrorHandler(error: OAuthSwiftError, afterRefresh: (()->())?=nil) {
+       print("OAUTH Request Error: \(error.localizedDescription)")
+        if case .tokenExpired = error {
+            var headers: OAuthSwift.Headers = [:]
+            var params: OAuthSwift.Parameters = [:]
+            params["redirect_uri"] = "fuse-auth://oauth-callback/spotify"
+            params["grant_type"] = "authorization_code"
+            params["code"] = oauthswift!.client.credential.oauthToken
+            let authVal = "b798e6bd7c154a6497778e08d58bd938:d4227806dfdf497ca1934511abd31178".data(using: .utf8)!.base64EncodedString()
+            headers["Authorization"] = "Basic \(authVal)"
+            oauthswift!.renewAccessToken(withRefreshToken: oauthswift!.client.credential.oauthRefreshToken, parameters: params, headers: headers, success: { (newCred, response, params) in
+                newCred.save()
+                afterRefresh?()
+            }) { (error) in
+                print("Error refreshing token: \(error.localizedDescription)")
+            }
+        }
+    }
 
 }

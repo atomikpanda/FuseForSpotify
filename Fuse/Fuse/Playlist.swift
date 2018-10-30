@@ -50,12 +50,17 @@ class Playlist: Mappable {
         // TODO: Implement loading playlists from /me/playlists
         // maybe use a closure as a param for this method to handle each paging request?
 
-        _ = appDelegate.oauthswift!.startAuthorizedRequest("https://api.spotify.com/v1/me/playlists", method: .GET, parameters: ["limit": "50", "offset": "0"], headers: nil, success: { response in
+        _ = appDelegate.oauthswift!.client.get("https://api.spotify.com/v1/me/playlists", parameters: ["limit": "50", "offset": "0"], headers: nil, success: { response in
             
+            // Handle our playlist response
             self.handlePlaylistsResponse(response: response, loaded: loaded)
 
         }) { error in
-            print("OAUTH Request Error: \(error.localizedDescription)")
+            appDelegate.oauthErrorHandler(error: error as! OAuthSwiftError) {
+                // Retry this very method with the same params
+                loadUserPlaylists(loaded: loaded)
+            }
+            
         }
     }
     
@@ -83,16 +88,25 @@ class Playlist: Mappable {
                 
                 guard let next = paging.next else { return }
                 // Handle next page
-                _ = appDelegate.oauthswift!.startAuthorizedRequest(next, method: .GET, parameters: [:], headers: nil, success: { response in
-                    handlePlaylistsResponse(response: response, loaded: loaded)
-                }) { error in
-                    print("OAUTH Request Error: \(error.localizedDescription)")
-                }
+                getNext(next: next, loaded: loaded)
                 
             }
             
         } catch {
             print("JSON ERROR: \(error.localizedDescription)")
+        }
+    }
+    
+    private class func getNext(next: String, loaded: @escaping (Paging, [Playlist]?) -> Void) {
+        _ = appDelegate.oauthswift!.client.get(next, parameters: [:], headers: nil, success: { response in
+            // Successfully got the next page so handle it
+            handlePlaylistsResponse(response: response, loaded: loaded)
+        }) { error in
+            
+            appDelegate.oauthErrorHandler(error: error as! OAuthSwiftError) {
+                // Retry getting the same playlists if we needed to renew
+                getNext(next: next, loaded: loaded)
+            }
         }
     }
 }

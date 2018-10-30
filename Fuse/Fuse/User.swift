@@ -32,7 +32,7 @@ class User: Mappable {
     }
     
     class func me(completion: @escaping (User) -> Void) {
-        _ = appDelegate.oauthswift!.startAuthorizedRequest("https://api.spotify.com/v1/me", method: .GET, parameters: [:], headers: nil, success: { response in
+        _ = appDelegate.oauthswift!.client.get("https://api.spotify.com/v1/me", parameters: [:], headers: nil, success: { response in
 
             do {
                 let rootObj = try JSON(data: response.data)
@@ -47,7 +47,10 @@ class User: Mappable {
             }
 
         }) { error in
-            print("OAUTH Request Error: \(error.localizedDescription)")
+            appDelegate.oauthErrorHandler(error: error as! OAuthSwiftError) {
+                // Retry getting the same info after renewal
+                me(completion: completion)
+            }
         }
     }
 }
