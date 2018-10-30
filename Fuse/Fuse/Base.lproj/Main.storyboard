@@ -39,6 +39,7 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                         <integer key="value" value="30"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </imageView>
                         </subviews>
@@ -86,20 +87,20 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="playlistTitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sfX-MX-02B">
-                                                    <rect key="frame" x="10" y="5" width="239.5" height="33.5"/>
+                                                    <rect key="frame" x="15" y="5" width="239.5" height="33.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="tracks" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gG3-06-OIF">
-                                                    <rect key="frame" x="254.5" y="5" width="82.5" height="33.5"/>
+                                                    <rect key="frame" x="259.5" y="5" width="77.5" height="33.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" name="secondary"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="sfX-MX-02B" firstAttribute="leading" secondItem="L2q-6v-rhA" secondAttribute="leading" constant="10" id="1OJ-jw-AM5"/>
+                                                <constraint firstItem="sfX-MX-02B" firstAttribute="leading" secondItem="L2q-6v-rhA" secondAttribute="leading" constant="15" id="1OJ-jw-AM5"/>
                                                 <constraint firstAttribute="bottom" secondItem="gG3-06-OIF" secondAttribute="bottom" constant="5" id="5ca-3B-Nwh"/>
                                                 <constraint firstAttribute="bottom" secondItem="sfX-MX-02B" secondAttribute="bottom" constant="5" id="ME3-n2-TKe"/>
                                                 <constraint firstAttribute="trailing" secondItem="gG3-06-OIF" secondAttribute="trailing" constant="5" id="QQj-J2-D8n"/>
