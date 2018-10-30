@@ -48,7 +48,7 @@ class TrackFeatures: Mappable {
         }
         let params = ["ids": ids.joined(separator: ",")]
         
-        Alamofire.request("https://api.spotify.com/v1/audio-features", method: .get, parameters: params, encoding: URLEncoding(destination: .queryString), headers: appDelegate.authorizationHeaders).responseArray(queue: nil, keyPath: "audio_features", context: nil, completionHandler:
+        Alamofire.request("https://api.spotify.com/v1/audio-features", method: .get, parameters: params, encoding: URLEncoding(destination: .queryString), headers: nil).responseArray(queue: nil, keyPath: "audio_features", context: nil, completionHandler:
             { (response: DataResponse<[TrackFeatures]>) in
                 let features: [TrackFeatures]? = response.result.value
                 

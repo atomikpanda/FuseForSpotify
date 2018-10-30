@@ -4,12 +4,16 @@ PODS:
     - Alamofire (~> 4.1)
     - ObjectMapper (~> 3.3)
   - OAuthSwift (1.2.2)
+  - OAuthSwiftAlamofire (0.2.0):
+    - Alamofire
+    - OAuthSwift
   - ObjectMapper (3.3.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.7)
   - AlamofireObjectMapper (~> 5.0)
   - OAuthSwift (~> 1.2.0)
+  - OAuthSwiftAlamofire
   - ObjectMapper (~> 3.2)
 
 SPEC REPOS:
@@ -17,14 +21,16 @@ SPEC REPOS:
     - Alamofire
     - AlamofireObjectMapper
     - OAuthSwift
+    - OAuthSwiftAlamofire
     - ObjectMapper
 
 SPEC CHECKSUMS:
   Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
   AlamofireObjectMapper: 3395e698901d8b0e6f48b7d0c43bd47875325102
   OAuthSwift: 27b34fe80b76b67cd8f45571e0be2432bc9f6de1
+  OAuthSwiftAlamofire: e51f11ff579dd4293bfe2a1a24c658caad4dac35
   ObjectMapper: b612bf8c8e99c4dc0bb6013a51f7c27966ed5da9
 
-PODFILE CHECKSUM: 1b312fcf3cff7b4df39f64dac98b5a8d1f379d27
+PODFILE CHECKSUM: 8a408fa94abdb3dd26b9c6776cd1991a2de05643
 
 COCOAPODS: 1.5.3

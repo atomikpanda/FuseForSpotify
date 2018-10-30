@@ -28,18 +28,25 @@ class ViewController: UIViewController {
     
     @IBAction func loadTracks(_ sender: AnyObject) {
         
-        // TESTING PURPOSES ONLY
-        let track = Track(map: Map(mappingType: .fromJSON, JSON: [:]))
-        track!.id = "4JpKVNYnVcJ8tuMKjAj50A"
-        let track2 = Track(map: Map(mappingType: .fromJSON, JSON: [:]))
-        track2!.id = "0FgVuueVnlwy2HMwrL7itl"
+            // TESTING PURPOSES ONLY
+            let track = Track(map: Map(mappingType: .fromJSON, JSON: [:]))
+            track!.id = "4JpKVNYnVcJ8tuMKjAj50A"
+            let track2 = Track(map: Map(mappingType: .fromJSON, JSON: [:]))
+            track2!.id = "0FgVuueVnlwy2HMwrL7itl"
+            
+            TrackFeatures.loadFeatures(for: [track!, track2!]) {
+                // Now the track's `features` variable is populated
+            }
+            
+            Playlist.loadUserPlaylists { (paging, playlist) in
+                
+            }
         
-        TrackFeatures.loadFeatures(for: [track!, track2!]) {
-            // Now the track's `features` variable is populated
-        }
+        
     }
     
     func beginAuthorization() {
+        return
         let oauthswift = appDelegate.oauthswift!
         oauthswift.authorizeURLHandler = SafariURLHandler(viewController: self, oauthSwift: oauthswift)
        
@@ -48,14 +55,19 @@ class ViewController: UIViewController {
             success: { credential, response, parameters in
                 print(credential.oauthToken)
                 
-                let tok = "\(credential.oauthToken)"
+                UserDefaults.standard.set(credential.oauthToken, forKey: "oauthToken")
+                UserDefaults.standard.set(credential.oauthTokenSecret, forKey: "oauthTokenSecret")
                 
-                let headers: HTTPHeaders = [
-                    "Authorization": "Authorization: Bearer \(tok)",
-                    "Accept": "application/json"
-                ]
+                let formatter = DateFormatter()
+                formatter.dateStyle = .full
+                formatter.timeStyle = .medium
                 
-                appDelegate.authorizationHeaders = headers
+                if let expiration = credential.oauthTokenExpiresAt {
+                    print("DATE FOR EXPIRATION: \(formatter.string(from: expiration))")
+                } else {
+                    print("EXPIRATION WAS NIL")
+                }
+
         },  failure: { error in
             print(error.localizedDescription)
         })

@@ -9,13 +9,14 @@
 import UIKit
 import Alamofire
 import OAuthSwift
+import OAuthSwiftAlamofire
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var oauthswift: OAuth2Swift?
-    var authorizationHeaders: HTTPHeaders?
+    
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -26,6 +27,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             responseType:   "token"
         )
         
+        
+        if let oauthToken = UserDefaults.standard.value(forKey: "oauthToken") as? String,
+            let oauthTokenSecret = UserDefaults.standard.value(forKey: "oauthTokenSecret") as? String {
+            
+            oauthswift?.client.credential.oauthToken = oauthToken
+            oauthswift?.client.credential.oauthTokenSecret = oauthTokenSecret
+            
+        }
+        
+        SessionManager.default.adapter = oauthswift?.requestAdapter
+        SessionManager.default.retrier = oauthswift?.requestAdapter
+        
+        
+        
         return true
     }
 
@@ -35,6 +50,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         return true
     }
+    
+//    public func refreshTokenIfExpired(completion: @escaping () -> ()) {
+//
+//        if let cred = oauthswift?.client.credential {
+//            if cred.isTokenExpired() {
+//                print("Token is expired")
+//                oauthswift?.renewAccessToken(withRefreshToken: cred.oauthRefreshToken, success: { (newCred, response, params) in
+//
+//                    print(newCred.oauthToken)
+//                    UserDefaults.standard.set(newCred.oauthToken, forKey: "oauthToken")
+//                    UserDefaults.standard.set(newCred.oauthTokenSecret, forKey: "oauthTokenSecret")
+//
+//                    completion()
+//                }, failure: { (error) in
+//                    print(error.localizedDescription)
+//                })
+//            } else {
+//                completion()
+//                print("Token not expired")
+//            }
+//        } else {
+//            print("No credentials")
+//        }
+//    }
     
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -55,9 +94,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        if let credential = oauthswift?.client.credential {
+            // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+            UserDefaults.standard.set(credential.oauthToken, forKey: "oauthToken")
+            UserDefaults.standard.set(credential.oauthTokenSecret, forKey: "oauthTokenSecret")
+            
+        }
     }
-
+    
 
 }
 
