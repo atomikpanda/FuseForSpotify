@@ -15,6 +15,8 @@ class PlaylistTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        selectedBackgroundView = UIView()
+        selectedBackgroundView?.backgroundColor = UIColor.darkGray
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

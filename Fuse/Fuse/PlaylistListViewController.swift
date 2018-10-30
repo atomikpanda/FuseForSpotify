@@ -13,6 +13,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     
     @IBOutlet weak var tableView: UITableView!
     var playlists: [Playlist] = []
+    var currentUser: User?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,10 +21,20 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         tableView.dataSource = self
         tableView.delegate = self
         
+        User.me { user in
+            self.currentUser = user
+        }
+        
         playlists.removeAll()
         Playlist.loadUserPlaylists { (paging, playlists) in
             if let loadedPlaylists = playlists {
                 self.playlists.append(contentsOf: loadedPlaylists)
+                
+                // Only current user's
+                self.playlists = self.playlists.filter({ (aPlaylist) -> Bool in
+                    return aPlaylist.owner?.id == self.currentUser?.id
+                })
+                
 //                if self.playlists.count == paging.total ?? 0 {
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
@@ -41,6 +52,10 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell", for: indexPath) as! PlaylistTableViewCell
         cell.playlistTitleLabel.text = playlists[indexPath.row].name
+        
+        let numTracks = playlists[indexPath.row].numberOfTracks ?? 0
+        cell.tracksLabel.text = "\(numTracks) Tracks"
+        
         return cell
     }
 

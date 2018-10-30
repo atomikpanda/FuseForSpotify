@@ -28,6 +28,7 @@ class Playlist: Mappable {
     var numberOfTracks: Int?
     var tracks: [Track]?
     var uri: String?
+    var owner: User?
     
     required init?(map: Map) {
         
@@ -38,6 +39,7 @@ class Playlist: Mappable {
         id <- map["id"]
         numberOfTracks <- map["tracks.total"]
         uri <- map["uri"]
+        owner <- map["owner"]
     }
     
     func loadTracks() {

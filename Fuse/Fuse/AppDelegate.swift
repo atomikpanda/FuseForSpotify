@@ -35,6 +35,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Customize UIKit appearance
         UIView.appearance().tintColor = UIColor(named: "secondary")
         UITableView.appearance().backgroundColor = UIColor(named: "primary")
+        UITableView.appearance().separatorColor = .darkGray
+
 
         return true
     }
