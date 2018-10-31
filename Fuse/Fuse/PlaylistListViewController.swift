@@ -58,18 +58,30 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "toTracks", sender: self)
+//        playlists[indexPath.row].loadTracks { (paging, loadedTracks) in
+//            print("l: \(loadedTracks)")
+//        }
+    }
 
     @IBAction func logout(_ sender: AnyObject) {
-       performSegue(withIdentifier: "unwindToWelcome", sender: self)
+        // TODO: Remove all cookies and saved token data
+        performSegue(withIdentifier: "unwindToWelcome", sender: self)
     }
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        
+        if segue.identifier == "toTracks",
+            let dest = segue.destination as? PlaylistViewController,
+            let selectedIndex = tableView.indexPathsForSelectedRows?.first {
+            dest.playlist = playlists[selectedIndex.row]
+        }
     }
-    */
+    
 
 }

@@ -15,10 +15,13 @@
 		667714642187977200AFDA80 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 667714622187977200AFDA80 /* LaunchScreen.storyboard */; };
 		6677146C2187990D00AFDA80 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6677146B2187990D00AFDA80 /* Track.swift */; };
 		6677146E2187991200AFDA80 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6677146D2187991200AFDA80 /* Playlist.swift */; };
-		667714712187994F00AFDA80 /* TrackFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667714702187994F00AFDA80 /* TrackFeatures.swift */; };
+		667714712187994F00AFDA80 /* AudioFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667714702187994F00AFDA80 /* AudioFeatures.swift */; };
 		667714732187A06400AFDA80 /* Paging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667714722187A06400AFDA80 /* Paging.swift */; };
 		668D326B2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D326A2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift */; };
 		668D326D2188E87D0013DA4B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D326C2188E87D0013DA4B /* User.swift */; };
+		668D326F21891F330013DA4B /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D326E21891F330013DA4B /* Artist.swift */; };
+		668D3271218921E50013DA4B /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D3270218921E50013DA4B /* TrackTableViewCell.swift */; };
+		668D327321894BC40013DA4B /* Array+Batch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D327221894BC40013DA4B /* Array+Batch.swift */; };
 		66AC399B2188AC98000FC6C3 /* PlaylistListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC399A2188AC98000FC6C3 /* PlaylistListViewController.swift */; };
 		66AC399E2188AD97000FC6C3 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC399D2188AD97000FC6C3 /* PlaylistViewController.swift */; };
 		66AC39A12188CB2C000FC6C3 /* PlaylistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC39A02188CB2C000FC6C3 /* PlaylistTableViewCell.swift */; };
@@ -35,10 +38,13 @@
 		667714652187977200AFDA80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6677146B2187990D00AFDA80 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		6677146D2187991200AFDA80 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
-		667714702187994F00AFDA80 /* TrackFeatures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackFeatures.swift; sourceTree = "<group>"; };
+		667714702187994F00AFDA80 /* AudioFeatures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFeatures.swift; sourceTree = "<group>"; };
 		667714722187A06400AFDA80 /* Paging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paging.swift; sourceTree = "<group>"; };
 		668D326A2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OAuthSwiftCredential+Save.swift"; sourceTree = "<group>"; };
 		668D326C2188E87D0013DA4B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		668D326E21891F330013DA4B /* Artist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
+		668D3270218921E50013DA4B /* TrackTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
+		668D327221894BC40013DA4B /* Array+Batch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Batch.swift"; sourceTree = "<group>"; };
 		66AC399A2188AC98000FC6C3 /* PlaylistListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistListViewController.swift; sourceTree = "<group>"; };
 		66AC399D2188AD97000FC6C3 /* PlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
 		66AC39A02188CB2C000FC6C3 /* PlaylistTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewCell.swift; sourceTree = "<group>"; };
@@ -106,8 +112,9 @@
 			children = (
 				668D326C2188E87D0013DA4B /* User.swift */,
 				6677146B2187990D00AFDA80 /* Track.swift */,
+				668D326E21891F330013DA4B /* Artist.swift */,
 				6677146D2187991200AFDA80 /* Playlist.swift */,
-				667714702187994F00AFDA80 /* TrackFeatures.swift */,
+				667714702187994F00AFDA80 /* AudioFeatures.swift */,
 				667714722187A06400AFDA80 /* Paging.swift */,
 			);
 			name = "Model Objects";
@@ -117,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				668D326A2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift */,
+				668D327221894BC40013DA4B /* Array+Batch.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -135,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				66AC39A02188CB2C000FC6C3 /* PlaylistTableViewCell.swift */,
+				668D3270218921E50013DA4B /* TrackTableViewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -270,11 +279,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				66AC399E2188AD97000FC6C3 /* PlaylistViewController.swift in Sources */,
-				667714712187994F00AFDA80 /* TrackFeatures.swift in Sources */,
+				667714712187994F00AFDA80 /* AudioFeatures.swift in Sources */,
+				668D327321894BC40013DA4B /* Array+Batch.swift in Sources */,
 				66AC399B2188AC98000FC6C3 /* PlaylistListViewController.swift in Sources */,
 				668D326B2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift in Sources */,
 				6677145C2187977200AFDA80 /* ViewController.swift in Sources */,
+				668D3271218921E50013DA4B /* TrackTableViewCell.swift in Sources */,
 				6677145A2187977200AFDA80 /* AppDelegate.swift in Sources */,
+				668D326F21891F330013DA4B /* Artist.swift in Sources */,
 				667714732187A06400AFDA80 /* Paging.swift in Sources */,
 				6677146C2187990D00AFDA80 /* Track.swift in Sources */,
 				6677146E2187991200AFDA80 /* Playlist.swift in Sources */,

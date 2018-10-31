@@ -38,13 +38,14 @@ class ViewController: UIViewController {
         let track2 = Track(map: Map(mappingType: .fromJSON, JSON: [:]))
         track2!.id = "0FgVuueVnlwy2HMwrL7itl"
 
-        TrackFeatures.loadFeatures(for: [track!, track2!]) { _ in
+        AudioFeatures.loadFeatures(for: [track!, track2!]) { tracks in
             // Now the track's `features` variable is populated
+            
         }
     }
 
     func beginAuthorization() {
-        return
+        return // This is just to test that we can still use this app without logging in again
         
         // Set our handler to use the SFSafariViewController
         let oauthswift = appDelegate.oauthswift!

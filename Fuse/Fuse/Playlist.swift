@@ -26,7 +26,7 @@ class Playlist: Mappable {
     var name: String?
     var id: String?
     var numberOfTracks: Int?
-    var tracks: [Track]?
+    var tracks: [Track]? = []
     var uri: String?
     var owner: User?
     
@@ -42,9 +42,74 @@ class Playlist: Mappable {
         owner <- map["owner"]
     }
     
-    func loadTracks() {
-        
+    // MARK: - Track Loading
+    
+    func loadTracks(loaded: @escaping (Paging, [Track]?) -> Void) {
+        guard let playlistId = id else { return }
+        _ = appDelegate.oauthswift!.client.get("https://api.spotify.com/v1/playlists/\(playlistId)/tracks", parameters: ["limit": "100", "offset": "0", "fields": "fields=items(track(name,href,artists))"], headers: nil, success: { response in
+            
+            self.tracks?.removeAll()
+            // Handle our tracks response
+            self.handleTracksResponse(response: response, loaded: loaded)
+            
+        }) { error in
+            appDelegate.oauthErrorHandler(error: error as! OAuthSwiftError) {
+                // Retry this very method with the same params
+                self.loadTracks(loaded: loaded)
+            }
+        }
     }
+    
+    private func handleTracksResponse(response: OAuthSwiftResponse, loaded: @escaping (Paging, [Track]?) -> Void) {
+        do {
+            let rootObj = try JSON(data: response.data)
+            
+            // Get our paging object
+            if let rootDict = rootObj.dictionaryObject,
+                let paging = Paging(JSON: rootDict) {
+                
+                // Make sure we have items in the paging object
+                guard let items = paging.items as? [[String: Any]] else { return }
+                
+                
+                // Get each playlist item from our items and convert it
+                for item in items {
+                    if let trackProp = item["track"],
+                        let trackDict = JSON(trackProp).dictionaryObject {
+                        
+                        guard let track = Track(JSON: trackDict) else { continue }
+                        tracks?.append(track)
+                    }
+                }
+                
+                // Notify callback
+                loaded(paging, self.tracks)
+                
+                guard let next = paging.next else { return }
+                // Handle next page
+                self.getNextTrack(next: next, loaded: loaded)
+                
+            }
+            
+        } catch {
+            print("JSON ERROR: \(error.localizedDescription)")
+        }
+    }
+    
+    private func getNextTrack(next: String, loaded: @escaping (Paging, [Track]?) -> Void) {
+        _ = appDelegate.oauthswift!.client.get(next, parameters: [:], headers: nil, success: { response in
+            // Successfully got the next page so handle it
+            self.handleTracksResponse(response: response, loaded: loaded)
+        }) { error in
+            
+            appDelegate.oauthErrorHandler(error: error as! OAuthSwiftError) {
+                // Retry getting the same playlists if we needed to renew
+                self.getNextTrack(next: next, loaded: loaded)
+            }
+        }
+    }
+    
+    // MARK: - Playlist Loading
     
     class func loadUserPlaylists(loaded: @escaping (Paging, [Playlist]?) -> Void) {
         // TODO: Implement loading playlists from /me/playlists
@@ -88,7 +153,7 @@ class Playlist: Mappable {
                 
                 guard let next = paging.next else { return }
                 // Handle next page
-                getNext(next: next, loaded: loaded)
+                getNextPlaylist(next: next, loaded: loaded)
                 
             }
             
@@ -97,7 +162,7 @@ class Playlist: Mappable {
         }
     }
     
-    private class func getNext(next: String, loaded: @escaping (Paging, [Playlist]?) -> Void) {
+    private class func getNextPlaylist(next: String, loaded: @escaping (Paging, [Playlist]?) -> Void) {
         _ = appDelegate.oauthswift!.client.get(next, parameters: [:], headers: nil, success: { response in
             // Successfully got the next page so handle it
             handlePlaylistsResponse(response: response, loaded: loaded)
@@ -105,7 +170,7 @@ class Playlist: Mappable {
             
             appDelegate.oauthErrorHandler(error: error as! OAuthSwiftError) {
                 // Retry getting the same playlists if we needed to renew
-                getNext(next: next, loaded: loaded)
+                getNextPlaylist(next: next, loaded: loaded)
             }
         }
     }
