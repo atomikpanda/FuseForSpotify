@@ -58,12 +58,12 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
                     return aPlaylist.owner?.id == self.currentUser?.id
                 })
                 
-                //                if self.playlists.count == paging.total ?? 0 {
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    self.refreshControl.endRefreshing()
-                }
-                //                }
+//                if self.playlists.count == paging.total ?? 0 {
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                        self.refreshControl.endRefreshing()
+                    }
+//                }
             }
         }
     }
@@ -74,6 +74,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell", for: indexPath) as! PlaylistTableViewCell
+        guard playlists.count > indexPath.row else { return cell}
         cell.playlistTitleLabel.text = playlists[indexPath.row].name
         
         let numTracks = playlists[indexPath.row].numberOfTracks ?? 0
