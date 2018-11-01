@@ -200,4 +200,64 @@ class Playlist: Mappable {
             }
         }
     }
+    
+    var pendingUris: [[String]]?
+    
+    public func replaceTracksWithCurrent() {
+        guard let playlistId = id, let allUris = self.urisFromTracks() else { return }
+        
+        pendingUris = allUris.batches(by: 100)
+        guard let firstBatch = self.pendingUris?.first else {return}
+        
+        var json = [String: Any]()
+        json["uris"] = firstBatch
+        
+        let requestData = json
+        print("\n\n"+requestData.description+"\n\n")
+        
+        
+        _ = appDelegate.oauthswift!.client.request("https://api.spotify.com/v1/playlists/\(playlistId)/tracks", method: .PUT,
+                                                   headers: ["Accept": "application/json", "Content-Type":"application/json"], body: try? JSON(requestData).rawData(), checkTokenExpiration: true, success: { (response) in
+                                                    self.pendingUris?.removeFirst()
+                                                   self.appendPendingTracksToPlaylist()
+        }) { (error) in
+            appDelegate.oauthErrorHandler(error: error) {
+                // Retry this very method with the same params
+                self.replaceTracksWithCurrent()
+                return
+            }
+        }
+        
+    }
+    
+    private func appendPendingTracksToPlaylist() {
+        guard let playlistId = id, let uris = pendingUris?.first else { return }
+        
+        var json = [String: Any]()
+        json["uris"] = uris
+        
+        _ = appDelegate.oauthswift!.client.request("https://api.spotify.com/v1/playlists/\(playlistId)/tracks", method: .POST,
+                                                   headers: ["Accept": "application/json", "Content-Type":"application/json"], body: try? JSON(json).rawData(), checkTokenExpiration: true, success: { (response) in
+                                                    self.pendingUris?.removeFirst()
+                                                    self.appendPendingTracksToPlaylist()
+        }) { (error) in
+            appDelegate.oauthErrorHandler(error: error) {
+                // Retry this very method with the same params
+                self.appendPendingTracksToPlaylist()
+                return
+            }
+        }
+    }
+    
+    private func urisFromTracks() -> [String]? {
+        guard let allTracks = self.tracks else { return nil }
+        var uris: [String] = []
+        
+        for track in allTracks {
+            guard let uri = track.uri else {continue}
+            uris.append(uri)
+        }
+        
+        return uris
+    }
 }

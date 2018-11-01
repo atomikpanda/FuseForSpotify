@@ -15,7 +15,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var toolbar: UIToolbar!
     
     var playlist: Playlist?
-    var reorderManager: ReorderManager?
+    var needsToUpdateRemote: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,9 +29,6 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         
         // Do any additional setup after loading the view.
         self.title = playlist?.name
-        if let playlistId = playlist?.id {
-            reorderManager = ReorderManager(playlistId: playlistId)
-        }
         
         playlist?.loadTracks { (paging, loadedTracks) in
             guard let loadedTracks = loadedTracks else { return }
@@ -44,6 +41,15 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        
+        // Save data if we are in edit mode
+        if self.tableView.isEditing && self.needsToUpdateRemote {
+            self.editTapped(nil)
+        }
+    }
+    
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return playlist?.tracks?.count ?? 0
@@ -52,11 +58,10 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         guard let track = self.playlist?.tracks?[sourceIndexPath.row] else {return}
         
-        reorderManager?.move(track: track, at: sourceIndexPath, to: destinationIndexPath)
         playlist?.tracks?.remove(at: sourceIndexPath.row)
         playlist?.tracks?.insert(track, at: destinationIndexPath.row)
+        self.needsToUpdateRemote = true
         print("index: \(sourceIndexPath.row) to \(destinationIndexPath.row)")
-        self.reorderManager?.reorder()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -82,6 +87,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
                 let trackAtPosition = TrackAtPosition(track: trackToDelete, positions: [indexPath.row])
                 playlist?.deleteTracks([trackAtPosition], completion: {
                     print("deleted...")
+                    
                     
                     self.playlist?.tracks?.remove(at: indexPath.row)
                     
@@ -113,13 +119,17 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.setEditing(!tableView.isEditing, animated: true)
         
         if tableView.isEditing {
+            needsToUpdateRemote = false
             // Now we are in edit mode
             toolbar.items?[2] = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
             
             toolbar.items?[0] = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(editTapped(_:)))
             toolbar.items?[4] = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(trashTapped(_:)))
         } else {
-            
+            if needsToUpdateRemote == true {
+               self.playlist?.replaceTracksWithCurrent()
+            }
+            self.needsToUpdateRemote = false
             toolbar.items?[0] = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editTapped(_:)))
             // Now we are in normal mode
             toolbar.items?[2] = UIBarButtonItem(image: #imageLiteral(resourceName: "operationIcon"), style: .plain, target: self, action: #selector(doOperation(_:)))
@@ -153,28 +163,25 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
                 let track = self.playlist?.tracks?[indexPath.row]
                 
                 if let trackToDelete = track {
-                     tracksAtPositions.append(TrackAtPosition(track: trackToDelete, positions: [indexPath.row]))
-                    if let id = trackToDelete.id {
-                        self.reorderManager?.trackWasDeleted(withId: id)
-                    }
+                    tracksAtPositions.append(TrackAtPosition(track: trackToDelete, positions: [indexPath.row]))
                 }
                 
             }
             
-            self.playlist?.deleteTracks(tracksAtPositions, completion: {
-                print("deleted...")
-                
-                for indexPath in selectedIndexPaths {
-                    self.playlist?.tracks?.remove(at: indexPath.row)
-                }
-                
-                DispatchQueue.main.async {
-                    self.tableView.deleteRows(at: selectedIndexPaths, with: .left)
-                    self.tableView.reloadData()
-                    self.editTapped(nil)
-                }
-                
-            })
+            
+            
+            for indexPath in selectedIndexPaths {
+                self.playlist?.tracks?.remove(at: indexPath.row)
+                self.needsToUpdateRemote = true
+            }
+            
+            DispatchQueue.main.async {
+                self.tableView.deleteRows(at: selectedIndexPaths, with: .left)
+                self.tableView.reloadData()
+                self.editTapped(nil)
+            }
+            
+            
         }
     }
     
