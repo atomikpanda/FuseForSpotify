@@ -15,13 +15,24 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var toolbar: UIToolbar!
     
     var playlist: Playlist?
+    var reorderManager: ReorderManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
+       
+        // TODO: Reenable
+        self.navigationItem.rightBarButtonItem = nil
+        toolbar.items?[2] = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        toolbar.items?[4] = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        
         // Do any additional setup after loading the view.
         self.title = playlist?.name
+        if let playlistId = playlist?.id {
+            reorderManager = ReorderManager(playlistId: playlistId)
+        }
+        
         playlist?.loadTracks { (paging, loadedTracks) in
             guard let loadedTracks = loadedTracks else { return }
             AudioFeatures.loadFeatures(for: loadedTracks, completion: { (tracks) in
@@ -36,6 +47,16 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return playlist?.tracks?.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        guard let track = self.playlist?.tracks?[sourceIndexPath.row] else {return}
+        
+        reorderManager?.move(track: track, at: sourceIndexPath, to: destinationIndexPath)
+        playlist?.tracks?.remove(at: sourceIndexPath.row)
+        playlist?.tracks?.insert(track, at: destinationIndexPath.row)
+        print("index: \(sourceIndexPath.row) to \(destinationIndexPath.row)")
+        self.reorderManager?.reorder()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -98,10 +119,17 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             toolbar.items?[0] = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(editTapped(_:)))
             toolbar.items?[4] = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(trashTapped(_:)))
         } else {
+            
             toolbar.items?[0] = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editTapped(_:)))
             // Now we are in normal mode
             toolbar.items?[2] = UIBarButtonItem(image: #imageLiteral(resourceName: "operationIcon"), style: .plain, target: self, action: #selector(doOperation(_:)))
-            toolbar.items?[4] = UIBarButtonItem(title: "Open Spotify", style: .plain, target: self, action: #selector(openSpotify(_:)))
+            
+            // TODO: Reenable
+//            toolbar.items?[4] = UIBarButtonItem(title: "Open Spotify", style: .plain, target: self, action: #selector(openSpotify(_:)))
+            /*** Placeholder ***/
+            toolbar.items?[4] = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+            toolbar.items?[2] = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+            /** End Placeholder ***/
         }
     }
     
@@ -111,9 +139,10 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBAction func trashTapped(_ sender: AnyObject) {
-        print("TODO: implement \(#function)")
+        
         guard var selectedIndexPaths = self.tableView.indexPathsForSelectedRows else {return}
         confirmDelete {
+            
             
             selectedIndexPaths.sort {
                 $0.row > $1.row
@@ -125,6 +154,9 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 if let trackToDelete = track {
                      tracksAtPositions.append(TrackAtPosition(track: trackToDelete, positions: [indexPath.row]))
+                    if let id = trackToDelete.id {
+                        self.reorderManager?.trackWasDeleted(withId: id)
+                    }
                 }
                 
             }
