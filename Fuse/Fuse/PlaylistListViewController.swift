@@ -12,6 +12,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     
     
     @IBOutlet weak var tableView: UITableView!
+    let refreshControl: UIRefreshControl = UIRefreshControl()
     var playlists: [Playlist] = []
     var currentUser: User?
     
@@ -21,6 +22,28 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         tableView.dataSource = self
         tableView.delegate = self
         
+        tableView.refreshControl = refreshControl
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(failedToLoad),
+                                               name: NSNotification.Name(rawValue: "failedToLoad"), object: nil)
+        
+        refreshControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
+        
+        loadData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func failedToLoad() {
+        print("refceived")
+        refreshControl.endRefreshing()
+    }
+    
+    @objc func loadData() {
         User.me { user in
             self.currentUser = user
         }
@@ -35,15 +58,15 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
                     return aPlaylist.owner?.id == self.currentUser?.id
                 })
                 
-//                if self.playlists.count == paging.total ?? 0 {
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
-//                }
+                //                if self.playlists.count == paging.total ?? 0 {
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    self.refreshControl.endRefreshing()
+                }
+                //                }
             }
         }
     }
-    
     // MARK: - UITableView Data Source
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return playlists.count
@@ -67,8 +90,13 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     }
 
     @IBAction func logout(_ sender: AnyObject) {
-        // TODO: Remove all cookies and saved token data
-        performSegue(withIdentifier: "unwindToWelcome", sender: self)
+        let confirmAlert = UIAlertController(title: "Log Out?", message: "Are you sure you want to log out?", preferredStyle: .alert)
+        confirmAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        confirmAlert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { _ in
+            self.performSegue(withIdentifier: "unwindToWelcome", sender: self)
+        }))
+        present(confirmAlert, animated: true, completion: nil)
+        
     }
     
     // MARK: - Navigation

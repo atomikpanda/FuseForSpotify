@@ -15,6 +15,15 @@ extension OAuthSwiftCredential {
         UserDefaults.standard.set(oauthTokenSecret, forKey: "oauthTokenSecret")
         UserDefaults.standard.set(oauthRefreshToken, forKey: "oauthRefreshToken")
     }
+    
+    func clearSavedForLogout() {
+        UserDefaults.standard.removeObject(forKey: "oauthToken")
+        UserDefaults.standard.removeObject(forKey: "oauthTokenSecret")
+        UserDefaults.standard.removeObject(forKey: "oauthRefreshToken")
+        self.oauthToken = ""
+        self.oauthTokenSecret = ""
+        self.oauthRefreshToken = ""
+    }
 
     func load() {
         if let oauthToken = UserDefaults.standard.value(forKey: "oauthToken") as? String {

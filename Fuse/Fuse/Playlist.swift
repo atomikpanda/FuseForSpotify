@@ -96,6 +96,34 @@ class Playlist: Mappable {
         }
     }
     
+    // MARK: - Track Deletion
+    
+    func deleteTracks(_ tracks: [TrackAtPosition], completion: @escaping ()->()) {
+        guard let playlistId = id else { return }
+        
+        var json = [[String: Any]]()
+        for track in tracks {
+            if let uri = track.track.uri {
+                json.append(["uri": uri, "positions": track.positions])
+            }
+        }
+        
+        let requestData = ["tracks": json]
+        
+        _ = appDelegate.oauthswift!.client.request("https://api.spotify.com/v1/playlists/\(playlistId)/tracks", method: .DELETE,
+                                                             headers: ["Accept": "application/json", "Content-Type":"application/json"], body: try? JSON(requestData).rawData(), checkTokenExpiration: true, success: { (response) in
+                                                                // Handle response
+                                                                completion()
+        }) { (error) in
+            appDelegate.oauthErrorHandler(error: error) {
+                // Retry this very method with the same params
+                self.deleteTracks(tracks, completion: completion)
+            }
+        }
+        
+        
+    }
+    
     private func getNextTrack(next: String, loaded: @escaping (Paging, [Track]?) -> Void) {
         _ = appDelegate.oauthswift!.client.get(next, parameters: [:], headers: nil, success: { response in
             // Successfully got the next page so handle it
@@ -112,8 +140,6 @@ class Playlist: Mappable {
     // MARK: - Playlist Loading
     
     class func loadUserPlaylists(loaded: @escaping (Paging, [Playlist]?) -> Void) {
-        // TODO: Implement loading playlists from /me/playlists
-        // maybe use a closure as a param for this method to handle each paging request?
 
         _ = appDelegate.oauthswift!.client.get("https://api.spotify.com/v1/me/playlists", parameters: ["limit": "50", "offset": "0"], headers: nil, success: { response in
             

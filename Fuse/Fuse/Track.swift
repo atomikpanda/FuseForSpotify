@@ -31,3 +31,8 @@ class Track: Mappable {
         uri <- map["uri"]
     }
 }
+
+struct TrackAtPosition {
+    var track: Track
+    var positions: [Int]
+}

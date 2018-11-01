@@ -26,8 +26,11 @@
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="tintColor" name="secondary"/>
                                 <state key="normal" title="Connect with Spotify"/>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                </variation>
                                 <connections>
-                                    <action selector="loadTracks:" destination="BYZ-38-t0r" eventType="touchDown" id="g80-fx-frF"/>
+                                    <action selector="beginAuthorization" destination="BYZ-38-t0r" eventType="touchDown" id="Kc5-jN-cqt"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splashIcon" translatesAutoresizingMaskIntoConstraints="NO" id="8Ar-Oc-VdV">
@@ -46,9 +49,12 @@
                         <color key="backgroundColor" name="primary"/>
                         <constraints>
                             <constraint firstItem="8Ar-Oc-VdV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="30" id="7tr-jU-yiG"/>
+                            <constraint firstItem="8Ar-Oc-VdV" firstAttribute="width" secondItem="var-hy-sqY" secondAttribute="width" multiplier="0.25" id="BI9-39-N3x"/>
+                            <constraint firstItem="8Ar-Oc-VdV" firstAttribute="centerY" secondItem="var-hy-sqY" secondAttribute="centerY" multiplier="0.8" id="CSq-gR-0t2"/>
                             <constraint firstItem="8Ar-Oc-VdV" firstAttribute="width" secondItem="var-hy-sqY" secondAttribute="width" multiplier="0.5" id="G3W-cd-Kbw"/>
                             <constraint firstItem="0wB-5h-i3q" firstAttribute="top" secondItem="8Ar-Oc-VdV" secondAttribute="bottom" constant="30" id="NB6-PX-9n0"/>
                             <constraint firstItem="var-hy-sqY" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="OAs-rs-Aej"/>
+                            <constraint firstItem="8Ar-Oc-VdV" firstAttribute="width" secondItem="var-hy-sqY" secondAttribute="width" multiplier="0.3" id="UQY-A5-DJe"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="var-hy-sqY" secondAttribute="bottom" id="hIm-nt-ce2"/>
                             <constraint firstItem="0wB-5h-i3q" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="k0k-NB-Cza"/>
                             <constraint firstItem="var-hy-sqY" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="k90-a9-apL"/>
@@ -56,6 +62,27 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="var-hy-sqY" secondAttribute="trailing" id="tFp-OR-4wn"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="BI9-39-N3x"/>
+                                <exclude reference="CSq-gR-0t2"/>
+                                <exclude reference="UQY-A5-DJe"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=compact">
+                            <mask key="constraints">
+                                <include reference="BI9-39-N3x"/>
+                                <exclude reference="G3W-cd-Kbw"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=regular">
+                            <mask key="constraints">
+                                <exclude reference="7tr-jU-yiG"/>
+                                <include reference="CSq-gR-0t2"/>
+                                <exclude reference="G3W-cd-Kbw"/>
+                                <include reference="UQY-A5-DJe"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" title="Welcome to Fuse for Spotify" id="6Sn-6i-JiL"/>
                     <connections>
@@ -87,13 +114,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="playlistTitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sfX-MX-02B">
-                                                    <rect key="frame" x="15" y="5" width="239.5" height="33.5"/>
+                                                    <rect key="frame" x="15" y="5" width="266.5" height="33.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="tracks" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gG3-06-OIF">
-                                                    <rect key="frame" x="259.5" y="5" width="77.5" height="33.5"/>
+                                                    <rect key="frame" x="286.5" y="5" width="89.5" height="33.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" name="secondary"/>
                                                     <nil key="highlightedColor"/>
@@ -157,41 +184,74 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="WAH-05-uGD">
                                 <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                 <items>
-                                    <barButtonItem systemItem="edit" id="gq1-bD-oXL"/>
+                                    <barButtonItem title="Edit" id="gq1-bD-oXL">
+                                        <connections>
+                                            <action selector="editTapped:" destination="fc6-lG-iWn" id="UWz-ul-Jqb"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="hLT-Tq-2GL"/>
-                                    <barButtonItem title="Operation" id="rmZ-9C-WxN"/>
+                                    <barButtonItem image="operationIcon" style="plain" id="rmZ-9C-WxN">
+                                        <connections>
+                                            <action selector="doOperation:" destination="fc6-lG-iWn" id="RTc-r0-ouC"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="hsq-cP-T3q"/>
-                                    <barButtonItem title="Open Spotify" id="d8Y-XQ-T5u"/>
+                                    <barButtonItem title="Open Spotify" id="d8Y-XQ-T5u">
+                                        <connections>
+                                            <action selector="openSpotify:" destination="fc6-lG-iWn" id="uyh-Tj-7zj"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                                 <color key="tintColor" name="secondary"/>
                             </toolbar>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5zY-eH-j1G">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" allowsSelectionDuringEditing="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="76" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5zY-eH-j1G">
                                 <rect key="frame" x="0.0" y="64" width="375" height="559"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="trackCell" textLabel="op5-px-r47" detailTextLabel="JQv-oW-iSZ" style="IBUITableViewCellStyleSubtitle" id="bkR-Ec-quL" customClass="TrackTableViewCell" customModule="Fuse" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="trackCell" rowHeight="76" id="bkR-Ec-quL" customClass="TrackTableViewCell" customModule="Fuse" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bkR-Ec-quL" id="e4z-QA-dqy">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="75.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="op5-px-r47">
-                                                    <rect key="frame" x="15" y="5" width="33.5" height="20.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="track" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PSC-Qy-3SX">
+                                                    <rect key="frame" x="15" y="10" width="384" height="18"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="JQv-oW-iSZ">
-                                                    <rect key="frame" x="15" y="25.5" width="44" height="14.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <nil key="textColor"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="artist" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9ax-Y1-QDJ">
+                                                    <rect key="frame" x="15" y="40.5" width="248.5" height="20"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="info" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fka-G8-nnv">
+                                                    <rect key="frame" x="268.5" y="42.5" width="130.5" height="18"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <color key="textColor" name="secondary"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="9ax-Y1-QDJ" firstAttribute="leading" secondItem="e4z-QA-dqy" secondAttribute="leading" constant="15" id="26Q-h3-HKD"/>
+                                                <constraint firstAttribute="bottom" secondItem="9ax-Y1-QDJ" secondAttribute="bottom" constant="15" id="DlL-or-0jO"/>
+                                                <constraint firstAttribute="trailing" secondItem="Fka-G8-nnv" secondAttribute="trailing" constant="15" id="STL-3V-DFc"/>
+                                                <constraint firstAttribute="trailing" secondItem="PSC-Qy-3SX" secondAttribute="trailing" constant="15" id="UG3-xg-cIN"/>
+                                                <constraint firstItem="PSC-Qy-3SX" firstAttribute="leading" secondItem="e4z-QA-dqy" secondAttribute="leading" constant="15" id="Wux-HI-lQX"/>
+                                                <constraint firstItem="PSC-Qy-3SX" firstAttribute="top" secondItem="e4z-QA-dqy" secondAttribute="top" constant="10" id="XSc-HX-uqa"/>
+                                                <constraint firstItem="Fka-G8-nnv" firstAttribute="leading" secondItem="9ax-Y1-QDJ" secondAttribute="trailing" constant="5" id="Xh6-c3-jSp"/>
+                                                <constraint firstAttribute="bottom" secondItem="Fka-G8-nnv" secondAttribute="bottom" constant="15" id="rVR-wy-G4H"/>
+                                                <constraint firstItem="9ax-Y1-QDJ" firstAttribute="width" secondItem="e4z-QA-dqy" secondAttribute="width" multiplier="0.6" id="xDE-7G-dHd"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" name="cell"/>
+                                        <connections>
+                                            <outlet property="artistLabel" destination="9ax-Y1-QDJ" id="dnx-tM-4i2"/>
+                                            <outlet property="infoLabel" destination="Fka-G8-nnv" id="kQG-cv-j1d"/>
+                                            <outlet property="trackLabel" destination="PSC-Qy-3SX" id="HkM-fb-XMX"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -209,16 +269,17 @@
                         <viewLayoutGuide key="safeArea" id="Ujn-U6-FQn"/>
                     </view>
                     <navigationItem key="navigationItem" title="Playlist Title" id="KcM-yn-yjD">
-                        <barButtonItem key="rightBarButtonItem" title="Stats" id="kJc-6m-Uxb"/>
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" image="statsIcon" id="kJc-6m-Uxb"/>
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="5zY-eH-j1G" id="pTH-3h-Lda"/>
+                        <outlet property="toolbar" destination="WAH-05-uGD" id="OJd-of-bed"/>
                         <segue destination="rZs-WL-69F" kind="show" identifier="toStats" id="QkB-GG-4lk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rgS-Ql-Niv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2440" y="123"/>
+            <point key="canvasLocation" x="2439.1999999999998" y="122.78860569715144"/>
         </scene>
         <!--Playlist Stats-->
         <scene sceneID="UOM-XX-eyO">
@@ -269,8 +330,10 @@
         </scene>
     </scenes>
     <resources>
+        <image name="operationIcon" width="25" height="25"/>
         <image name="splash" width="5184" height="3456"/>
         <image name="splashIcon" width="2048" height="2048"/>
+        <image name="statsIcon" width="25" height="25"/>
         <namedColor name="cell">
             <color red="0.10980392156862745" green="0.10980392156862745" blue="0.11372549019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

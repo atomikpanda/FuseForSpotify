@@ -10,9 +10,15 @@ import UIKit
 
 class TrackTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var trackLabel: UILabel!
+    @IBOutlet weak var artistLabel: UILabel!
+    @IBOutlet weak var infoLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        selectedBackgroundView = UIView()
+        selectedBackgroundView?.backgroundColor = UIColor.darkGray
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
