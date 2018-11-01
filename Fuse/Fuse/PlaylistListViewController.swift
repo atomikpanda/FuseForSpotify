@@ -84,7 +84,9 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "toTracks", sender: self)
+        if shouldPerformSegue(withIdentifier: "toTracks", sender: self) {
+            performSegue(withIdentifier: "toTracks", sender: self)
+        }
 //        playlists[indexPath.row].loadTracks { (paging, loadedTracks) in
 //            print("l: \(loadedTracks)")
 //        }
@@ -101,6 +103,21 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     // MARK: - Navigation
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier == "toTracks", let selectedIndex = tableView.indexPathsForSelectedRows?.first {
+            if !(playlists.count > selectedIndex.row) {
+                
+                let alert = UIAlertController(title: "Could not load playlist.", message: "Check your internet connection and try reloading.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                present(alert, animated: true, completion: nil)
+                
+                return false
+            }
+        }
+        
+        return true
+    }
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -108,7 +125,9 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         if segue.identifier == "toTracks",
             let dest = segue.destination as? PlaylistViewController,
             let selectedIndex = tableView.indexPathsForSelectedRows?.first {
-            dest.playlist = playlists[selectedIndex.row]
+            
+                dest.playlist = playlists[selectedIndex.row]
+            
         }
     }
     
