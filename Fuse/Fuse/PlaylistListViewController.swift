@@ -14,6 +14,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var tableView: UITableView!
     let refreshControl: UIRefreshControl = UIRefreshControl()
     var playlists: [Playlist] = []
+    var loadingPlaylists: [Playlist] = []
     var currentUser: User?
     
     
@@ -41,33 +42,55 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         NotificationCenter.default.removeObserver(self)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(true)
+        refreshControl.endRefreshing()
+        
+        guard let indexPath = tableView.indexPathForSelectedRow else {return}
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     @objc func failedToLoad() {
         print("refceived")
         refreshControl.endRefreshing()
     }
     
     @objc func loadData() {
-        User.me { user in
-            self.currentUser = user
-        }
         
-        playlists.removeAll()
-        Playlist.loadUserPlaylists { (paging, playlists) in
-            if let loadedPlaylists = playlists {
-                self.playlists.append(contentsOf: loadedPlaylists)
-                
-                // Only current user's
-                self.playlists = self.playlists.filter({ (aPlaylist) -> Bool in
-                    return aPlaylist.owner?.id == self.currentUser?.id
-                })
-                
-                //                if self.playlists.count == paging.total ?? 0 {
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    self.refreshControl.endRefreshing()
-                }
-                //                }
+        // Load user data
+        User.me(completion: doneLoadingUser(_:))
+        
+    }
+    
+    func doneLoadingUser(_ user: User) {
+        self.currentUser = user
+        
+        Playlist.loadUserPlaylists(loaded: loadedPlaylistBatch(_:_:))
+    }
+    
+    func loadedPlaylistBatch(_ paging: Paging, _ playlists: [Playlist]?) {
+        if let loadedPlaylists = playlists {
+            self.loadingPlaylists.append(contentsOf: loadedPlaylists)
+            
+            if self.loadingPlaylists.count == paging.total ?? 0 {
+                finishedLoadingAllBatches()
             }
+        }
+    }
+    
+    func finishedLoadingAllBatches() {
+        
+        // Only current user's
+        self.loadingPlaylists = self.loadingPlaylists.filter({ (aPlaylist) -> Bool in
+            return aPlaylist.owner?.id == self.currentUser?.id
+        })
+        
+        self.playlists = loadingPlaylists
+        self.loadingPlaylists.removeAll()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.refreshControl.endRefreshing()
         }
     }
     
@@ -79,9 +102,11 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell", for: indexPath) as! PlaylistTableViewCell
-        guard playlists.count > indexPath.row else { return cell}
-        cell.playlistTitleLabel.text = playlists[indexPath.row].name
         
+        guard playlists.count > indexPath.row else { return cell}
+    
+        // Configure cell
+        cell.playlistTitleLabel.text = playlists[indexPath.row].name
         let numTracks = playlists[indexPath.row].numberOfTracks ?? 0
         cell.tracksLabel.text = "\(numTracks) Tracks"
         
@@ -89,12 +114,10 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if shouldPerformSegue(withIdentifier: "toTracks", sender: self) {
             performSegue(withIdentifier: "toTracks", sender: self)
         }
-        //        playlists[indexPath.row].loadTracks { (paging, loadedTracks) in
-        //            print("l: \(loadedTracks)")
-        //        }
     }
     
     @IBAction func logout(_ sender: AnyObject) {
