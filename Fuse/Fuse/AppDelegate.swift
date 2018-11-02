@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var alert: UIAlertController?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Create our authentication manager
         oauthswift = OAuth2Swift(
             consumerKey:    "b798e6bd7c154a6497778e08d58bd938",
             consumerSecret: "d4227806dfdf497ca1934511abd31178",
@@ -42,6 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        // Handle the spotify callback
         if url.host == "oauth-callback" {
             OAuthSwift.handle(url: url)
         }
@@ -75,15 +76,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if case .requestError = error,
             let err = error.errorUserInfo["error"] as? NSError {
+            
+            // No network
             if err.code == -1009 {
                 
                 DispatchQueue.main.async {
+                    // Create an alert
                     if self.alert == nil {
                         self.alert = UIAlertController(title: "Failed to load.", message: err.localizedDescription, preferredStyle: .alert)
+                        
                         self.alert?.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+                            
+                            // Post the notification
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "failedToLoad"), object: nil, userInfo: nil)
                             self.alert = nil
                         }))
+                        
+                        // Present the alert
                         self.window?.rootViewController?.present(self.alert!, animated: true, completion: nil)
                     }
                 }
@@ -93,15 +102,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         if case .tokenExpired = error {
+            // Formulate the request to renew our token
             var headers: OAuthSwift.Headers = [:]
             var params: OAuthSwift.Parameters = [:]
+            
+            // Spotify requires extra info
             params["redirect_uri"] = "fuse-auth://oauth-callback/spotify"
             params["grant_type"] = "authorization_code"
             params["code"] = oauthswift!.client.credential.oauthToken
+            
+            // Create the authorization header
             let authVal = "b798e6bd7c154a6497778e08d58bd938:d4227806dfdf497ca1934511abd31178".data(using: .utf8)!.base64EncodedString()
             headers["Authorization"] = "Basic \(authVal)"
+            
+            // Submit
             oauthswift!.renewAccessToken(withRefreshToken: oauthswift!.client.credential.oauthRefreshToken, parameters: params, headers: headers, success: { (newCred, response, params) in
+                // Save the new token
                 newCred.save()
+                // Done. notify that the token was renewed
                 afterRefresh?()
             }) { (error) in
                 print("Error refreshing token: \(error.localizedDescription)")
