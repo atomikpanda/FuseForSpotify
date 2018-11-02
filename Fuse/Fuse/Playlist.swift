@@ -76,18 +76,21 @@ class Playlist: Mappable {
                 
                 
                 // Get each playlist item from our items and convert it
+                var tracksInThisBatch: [Track] = []
                 for item in items {
                     if let trackProp = item["track"],
                         let trackDict = JSON(trackProp).dictionaryObject {
                         
                         // Convert the json to a Track object
                         guard let track = Track(JSON: trackDict) else { continue }
-                        tracks?.append(track)
+                        tracksInThisBatch.append(track)
                     }
                 }
                 
+                tracks?.append(contentsOf: tracksInThisBatch)
+                
                 // Notify callback
-                loaded(paging, self.tracks)
+                loaded(paging, tracksInThisBatch)
                 
                 guard let next = paging.next else { return }
                 
@@ -138,6 +141,8 @@ class Playlist: Mappable {
         // Gets the next items
         _ = appDelegate.oauthswift!.client.get(next, parameters: [:], headers: nil, success: { response in
             // Successfully got the next page so handle it
+           
+            
             self.handleTracksResponse(response: response, loaded: loaded)
         }) { error in
             

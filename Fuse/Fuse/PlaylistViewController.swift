@@ -14,8 +14,11 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var toolbar: UIToolbar!
+    @IBOutlet weak var progressView: UIProgressView!
     
     var playlist: Playlist?
+    var tracks: [Track] = []
+    var loadingTracks: [Track] = []
     var needsToUpdateRemote: Bool = false
     
     override func viewDidLoad() {
@@ -28,17 +31,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         self.title = playlist?.name
         
         // Start loading the tracks
-        playlist?.loadTracks { (paging, loadedTracks) in
-            guard let loadedTracks = loadedTracks else { return }
-            
-            // Start loading the audio features for each track
-            AudioFeatures.loadFeatures(for: loadedTracks, completion: { (tracks) in
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            })
-            
-        }
+        loadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -50,20 +43,75 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
+    func loadData() {
+        progressView.setProgress(0, animated: false)
+        loadingTracks.removeAll()
+        playlist?.loadTracks(loaded: trackBatchDidLoad(_:_:))
+    }
+    
+    func trackBatchDidLoad(_ paging: Paging, _ tracks: [Track]?) {
+        guard let loadedTracks = tracks else { return }
+        
+        self.loadingTracks.append(contentsOf: loadedTracks)
+        
+        if let total = self.playlist?.numberOfTracks {
+            let progress = Float(self.loadingTracks.count)/Float(total)
+            DispatchQueue.main.async {
+                
+                if progress > 0 {
+                    
+                    CATransaction.begin()
+                    // Update the progress bar to 0 after animating
+                    CATransaction.setCompletionBlock {
+                        if progress == 1.0 {
+                            self.progressView.setProgress(0.0, animated: false)
+                        }
+                    }
+                    self.progressView.setProgress(progress, animated: true)
+                    CATransaction.commit()
+                    
+                }
+            }
+        }
+        
+        print("loaded: \(self.loadingTracks.count) of \(paging.total ?? 0)")
+        if self.loadingTracks.count == self.playlist?.numberOfTracks ?? 0 {
+            self.finishedLoadingAllBatches()
+        }
+        
+    }
+    
+    func finishedLoadingAllBatches() {
+        self.tracks = loadingTracks
+        self.loadingTracks.removeAll()
+        
+        // Start loading the audio features for each track
+//        AudioFeatures.loadFeatures(for: loadedTracks, completion: { (tracks) in
+//            
+//            
+//            
+//        })
+        DispatchQueue.main.async {
+            
+            self.tableView.reloadData()
+        }
+    }
+    
     // MARK: - Table View Data Source
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return playlist?.tracks?.count ?? 0
+        return tracks.count
     }
     
     // MARK: - Reordering / Rearranging
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard let track = self.playlist?.tracks?[sourceIndexPath.row] else {return}
+        let track = tracks[sourceIndexPath.row]
         
         // Modify data model to reflect the new position
-        playlist?.tracks?.remove(at: sourceIndexPath.row)
-        playlist?.tracks?.insert(track, at: destinationIndexPath.row)
+        tracks.remove(at: sourceIndexPath.row)
+        tracks.insert(track, at: destinationIndexPath.row)
+        self.playlist?.tracks = tracks
         
         // We need to update the remote data source when the user presses done or back
         self.needsToUpdateRemote = true
@@ -75,12 +123,12 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "trackCell") as! TrackTableViewCell
         
         // Configure cell
-        let track = playlist?.tracks?[indexPath.row]
-        cell.trackLabel.text = track?.name
-        cell.artistLabel.text = track?.artists?.first?.name
+        let track = tracks[indexPath.row]
+        cell.trackLabel.text = track.name
+        cell.artistLabel.text = track.artists?.first?.name
         
         // TODO: Milestone 2
-        cell.infoLabel.text = "\(Int(track?.features?.tempo?.rounded() ?? 0))"
+        cell.infoLabel.text = "\(Int(track.features?.tempo?.rounded() ?? 0))"
         
         return cell
     }
@@ -92,30 +140,31 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         if editingStyle == .delete {
             
             // Get the track
-            let track = self.playlist?.tracks?[indexPath.row]
+            let track = tracks[indexPath.row]
             
-            if let trackToDelete = track {
+            
+            
+            // Get the track at the position so that we don't delete other occurrences
+            let trackAtPosition = TrackAtPosition(track: track, positions: [indexPath.row])
+            
+            // Send the request to delete our track with the id and specified position
+            playlist?.deleteTracks([trackAtPosition], completion: {
+                // Deleted successfully from remote server
                 
-                // Get the track at the position so that we don't delete other occurrences
-                let trackAtPosition = TrackAtPosition(track: trackToDelete, positions: [indexPath.row])
+                print("deleted...")
                 
-                // Send the request to delete our track with the id and specified position
-                playlist?.deleteTracks([trackAtPosition], completion: {
-                    // Deleted successfully from remote server
-                    
-                    print("deleted...")
-                    
-                    // Remove it from our data model
-                    self.playlist?.tracks?.remove(at: indexPath.row)
-                    
-                    DispatchQueue.main.async {
-                        // Delete the row and reload
-                        self.tableView.deleteRows(at: [indexPath], with: .left)
-                        self.tableView.reloadData()
-                    }
-                    
-                })
-            }
+                // Remove it from our data model
+                self.tracks.remove(at: indexPath.row)
+                self.playlist?.tracks = self.tracks
+                
+                DispatchQueue.main.async {
+                    // Delete the row and reload
+                    self.tableView.deleteRows(at: [indexPath], with: .left)
+                    self.tableView.reloadData()
+                }
+                
+            })
+            
             
         }
     }
@@ -139,6 +188,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             if needsToUpdateRemote == true {
                 // If the user made a change update the tracks in a playlist
                 // with the current tracks property of the playlist we are in
+                self.playlist?.tracks = self.tracks
                 self.playlist?.replaceTracksWithCurrent()
             }
             
@@ -175,9 +225,10 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             }
             
             for indexPath in selectedIndexPaths {
-                self.playlist?.tracks?.remove(at: indexPath.row)
+                self.tracks.remove(at: indexPath.row)
                 self.needsToUpdateRemote = true
             }
+            self.playlist?.tracks = self.tracks
             
             DispatchQueue.main.async {
                 // Update the table view on the main thread

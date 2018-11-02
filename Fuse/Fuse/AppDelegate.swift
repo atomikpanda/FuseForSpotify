@@ -7,16 +7,13 @@
 //
 
 import UIKit
-import Alamofire
 import OAuthSwift
-import OAuthSwiftAlamofire
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     var oauthswift: OAuth2Swift?
-    var sessionManager = SessionManager.default
     var alert: UIAlertController?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {

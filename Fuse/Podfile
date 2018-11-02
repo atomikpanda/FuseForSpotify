@@ -8,8 +8,9 @@ target 'Fuse' do
   # Pods for Fuse
   pod 'OAuthSwift', '~> 1.2.0'
   pod 'ObjectMapper', '~> 3.2'
-  pod 'AlamofireObjectMapper', '~> 5.0'
-  pod 'Alamofire', '~> 4.7'
-  pod 'OAuthSwiftAlamofire'
+  # pod 'AlamofireObjectMapper', '~> 5.0'
+  # pod 'Alamofire', '~> 4.7'
+  # pod 'OAuthSwiftAlamofire'
   pod 'SwiftyJSON', '~> 4.0'
+  pod 'ReachabilitySwift'
 end

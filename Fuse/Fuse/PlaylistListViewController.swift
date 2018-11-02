@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Reachability
 
 class PlaylistListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -16,7 +17,8 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     var playlists: [Playlist] = []
     var loadingPlaylists: [Playlist] = []
     var currentUser: User?
-    
+    let reachability = Reachability()!
+    var isReachable: Bool = false
     
     // MARK: - View Lifecycle
     
@@ -28,12 +30,41 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         tableView.delegate = self
         tableView.refreshControl = refreshControl
         
-        NotificationCenter.default.addObserver(self, selector: #selector(failedToLoad),
-                                               name: NSNotification.Name(rawValue: "failedToLoad"), object: nil)
+        reachability.whenReachable = { reachability in
+            if reachability.connection != .none {
+                self.isReachable = true
+            }
+            else {
+                self.isReachable = false
+            }
+        }
+        
+        reachability.whenUnreachable = { reachability in
+            if reachability.connection != .none {
+                self.isReachable = true
+            }
+            else {
+                self.isReachable = false
+            }
+        }
+        
+        do {
+            try reachability.startNotifier()
+        } catch {
+            print("Failed to start reachability")
+        }
         
         refreshControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
         
         loadData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.addObserver(self, selector: #selector(failedToLoad),
+                                               name: NSNotification.Name(rawValue: "failedToLoad"), object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -138,11 +169,14 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == "toTracks", let selectedIndex = tableView.indexPathsForSelectedRows?.first {
-            if !(playlists.count > selectedIndex.row) {
+            if self.isReachable == false || !(playlists.count > selectedIndex.row) {
                 
                 let alert = UIAlertController(title: "Could not load playlist.", message: "Check your internet connection and try reloading.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 present(alert, animated: true, completion: nil)
+                
+                // Failed to segue so deselect
+                tableView.deselectRow(at: selectedIndex, animated: true)
                 
                 return false
             }

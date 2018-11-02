@@ -8,8 +8,6 @@
 
 import Foundation
 import ObjectMapper
-import Alamofire
-import AlamofireObjectMapper
 import SwiftyJSON
 import OAuthSwift
 

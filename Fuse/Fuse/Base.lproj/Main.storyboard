@@ -205,7 +205,7 @@
                                 <color key="tintColor" name="secondary"/>
                             </toolbar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" allowsSelectionDuringEditing="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="76" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5zY-eH-j1G">
-                                <rect key="frame" x="0.0" y="64" width="375" height="559"/>
+                                <rect key="frame" x="0.0" y="65.5" width="375" height="557.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="trackCell" rowHeight="76" id="bkR-Ec-quL" customClass="TrackTableViewCell" customModule="Fuse" customModuleProvider="target">
@@ -255,16 +255,23 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="PMe-v8-HOc">
+                                <rect key="frame" x="0.0" y="64" width="375" height="2.5"/>
+                                <color key="progressTintColor" name="secondary"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" name="primary"/>
                         <constraints>
                             <constraint firstItem="WAH-05-uGD" firstAttribute="top" secondItem="5zY-eH-j1G" secondAttribute="bottom" id="07R-b7-2dH"/>
+                            <constraint firstAttribute="trailing" secondItem="PMe-v8-HOc" secondAttribute="trailing" id="430-mN-rYe"/>
                             <constraint firstItem="WAH-05-uGD" firstAttribute="bottom" secondItem="Ujn-U6-FQn" secondAttribute="bottom" id="G62-d5-nUi"/>
                             <constraint firstItem="WAH-05-uGD" firstAttribute="trailing" secondItem="Ujn-U6-FQn" secondAttribute="trailing" id="Mzn-7X-Sae"/>
+                            <constraint firstItem="PMe-v8-HOc" firstAttribute="top" secondItem="Ujn-U6-FQn" secondAttribute="top" id="Pt2-eJ-Jfr"/>
+                            <constraint firstItem="PMe-v8-HOc" firstAttribute="leading" secondItem="nJ3-98-6Xg" secondAttribute="leading" id="QQd-ZN-Ptp"/>
                             <constraint firstItem="Ujn-U6-FQn" firstAttribute="trailing" secondItem="5zY-eH-j1G" secondAttribute="trailing" id="TzR-le-Whr"/>
                             <constraint firstItem="WAH-05-uGD" firstAttribute="leading" secondItem="Ujn-U6-FQn" secondAttribute="leading" id="Vce-og-7AU"/>
-                            <constraint firstItem="5zY-eH-j1G" firstAttribute="top" secondItem="Ujn-U6-FQn" secondAttribute="top" id="e5X-Kz-hf1"/>
                             <constraint firstItem="5zY-eH-j1G" firstAttribute="leading" secondItem="Ujn-U6-FQn" secondAttribute="leading" id="gD9-op-JEf"/>
+                            <constraint firstItem="5zY-eH-j1G" firstAttribute="top" secondItem="PMe-v8-HOc" secondAttribute="bottom" id="j4i-yb-7G7"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Ujn-U6-FQn"/>
                     </view>
@@ -272,6 +279,7 @@
                         <barButtonItem key="rightBarButtonItem" enabled="NO" image="statsIcon" id="kJc-6m-Uxb"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="progressView" destination="PMe-v8-HOc" id="ZQt-ew-3If"/>
                         <outlet property="tableView" destination="5zY-eH-j1G" id="pTH-3h-Lda"/>
                         <outlet property="toolbar" destination="WAH-05-uGD" id="OJd-of-bed"/>
                         <segue destination="rZs-WL-69F" kind="show" identifier="toStats" id="QkB-GG-4lk"/>
