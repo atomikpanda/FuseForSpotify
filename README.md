@@ -25,3 +25,10 @@ Username: `lertzkih5jqkyfz14o6ocozvv`
 ### Known Issues
 
 Sometimes the playlists list screen appears blank perhaps due to an inconsistent network connection. This can be fixed by pulling down to refresh when on the Your Playlist screen.
+
+
+
+### Additional Notes
+
+There may also be warnings inside of third-party libraries.
+
