@@ -113,12 +113,12 @@
 			isa = PBXGroup;
 			children = (
 				668D326C2188E87D0013DA4B /* User.swift */,
-				668D3274218B411F0013DA4B /* ReorderManager.swift */,
 				6677146B2187990D00AFDA80 /* Track.swift */,
 				668D326E21891F330013DA4B /* Artist.swift */,
 				6677146D2187991200AFDA80 /* Playlist.swift */,
 				667714702187994F00AFDA80 /* AudioFeatures.swift */,
 				667714722187A06400AFDA80 /* Paging.swift */,
+				668D3274218B411F0013DA4B /* ReorderManager.swift */,
 			);
 			name = "Model Objects";
 			sourceTree = "<group>";

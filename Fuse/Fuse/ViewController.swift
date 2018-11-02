@@ -7,9 +7,6 @@
 //
 
 import UIKit
-import AlamofireObjectMapper
-import Alamofire
-import ObjectMapper
 import OAuthSwift
 
 private let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -27,10 +24,9 @@ class ViewController: UIViewController {
         }
     }
     
-    
+    // MARK: - Authorization
     
     @IBAction func beginAuthorization() {
-        //        return // This is just to test that we can still use this app without logging in again
         
         // Set our handler to use the SFSafariViewController
         let oauthswift = appDelegate.oauthswift!
@@ -42,39 +38,42 @@ class ViewController: UIViewController {
             "playlist-modify-private",
             "playlist-modify-public",
             "playlist-read-private"
-        ].joined(separator: "+")
-   
+            ].joined(separator: "+")
+        
         let params: OAuthSwift.Parameters = ["show_dialog": "true"]
         oauthswift.authorize(withCallbackURL: URL(string: "fuse-auth://oauth-callback/spotify")!,
-                             scope: scopes, state:"SPOTIFY", parameters: params, headers: nil,
-                             success: { credential, response, parameters in
-                                print(credential.oauthToken)
-                                
-                                // Save tokens for next launch
-                                credential.save()
-                                
-                                // If we got our token then show the Playlists screen
-                                if !credential.oauthToken.isEmpty {
-                                    DispatchQueue.main.async {
-                                        self.performSegue(withIdentifier: "toPlaylists", sender: self)
-                                    }
-                                }
-                                
-                                // Debug purposes to show the expiration on first auth
-                                let formatter = DateFormatter()
-                                formatter.dateStyle = .full
-                                formatter.timeStyle = .medium
-                                
-                                if let expiration = credential.oauthTokenExpiresAt {
-                                    print("DATE FOR EXPIRATION: \(formatter.string(from: expiration))")
-                                } else {
-                                    print("EXPIRATION WAS NIL")
-                                }
-                                
-        },  failure: { error in
-            print(error.localizedDescription)
+                             scope: scopes, state:"SPOTIFY",
+                             parameters: params, headers: nil,
+                             success: authorizationDidSucceed(_:_:_:),
+                             failure: { error in
+                                print(error.localizedDescription)
         })
         
+    }
+    
+    func authorizationDidSucceed(_ credential: OAuthSwiftCredential, _ response: OAuthSwiftResponse?, _ parameters: OAuthSwift.Parameters) {
+        print(credential.oauthToken)
+        
+        // Save tokens for next launch
+        credential.save()
+        
+        // If we got our token then show the Playlists screen
+        if !credential.oauthToken.isEmpty {
+            DispatchQueue.main.async {
+                self.performSegue(withIdentifier: "toPlaylists", sender: self)
+            }
+        }
+        
+        // Debug purposes to show the expiration on first auth
+        let formatter = DateFormatter()
+        formatter.dateStyle = .full
+        formatter.timeStyle = .medium
+        
+        if let expiration = credential.oauthTokenExpiresAt {
+            print("DATE FOR EXPIRATION: \(formatter.string(from: expiration))")
+        } else {
+            print("EXPIRATION WAS NIL")
+        }
     }
     
     @IBAction func unwindToWelcome(_ unwindSegue: UIStoryboardSegue) {

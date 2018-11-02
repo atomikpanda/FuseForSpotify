@@ -10,18 +10,21 @@ import UIKit
 
 class PlaylistListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    
+    // MARK: - Outlets
     @IBOutlet weak var tableView: UITableView!
     let refreshControl: UIRefreshControl = UIRefreshControl()
     var playlists: [Playlist] = []
     var currentUser: User?
     
+    
+    // MARK: - View Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        // Set up table view
         tableView.dataSource = self
         tableView.delegate = self
-        
         tableView.refreshControl = refreshControl
         
         NotificationCenter.default.addObserver(self, selector: #selector(failedToLoad),
@@ -58,16 +61,18 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
                     return aPlaylist.owner?.id == self.currentUser?.id
                 })
                 
-//                if self.playlists.count == paging.total ?? 0 {
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                        self.refreshControl.endRefreshing()
-                    }
-//                }
+                //                if self.playlists.count == paging.total ?? 0 {
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    self.refreshControl.endRefreshing()
+                }
+                //                }
             }
         }
     }
+    
     // MARK: - UITableView Data Source
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return playlists.count
     }
@@ -87,17 +92,21 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         if shouldPerformSegue(withIdentifier: "toTracks", sender: self) {
             performSegue(withIdentifier: "toTracks", sender: self)
         }
-//        playlists[indexPath.row].loadTracks { (paging, loadedTracks) in
-//            print("l: \(loadedTracks)")
-//        }
+        //        playlists[indexPath.row].loadTracks { (paging, loadedTracks) in
+        //            print("l: \(loadedTracks)")
+        //        }
     }
-
+    
     @IBAction func logout(_ sender: AnyObject) {
+        
+        // Confirmation before logout
         let confirmAlert = UIAlertController(title: "Log Out?", message: "Are you sure you want to log out?", preferredStyle: .alert)
+        
         confirmAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         confirmAlert.addAction(UIAlertAction(title: "Logout", style: .default, handler: { _ in
             self.performSegue(withIdentifier: "unwindToWelcome", sender: self)
         }))
+        
         present(confirmAlert, animated: true, completion: nil)
         
     }
@@ -118,7 +127,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         
         return true
     }
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -126,10 +135,11 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
             let dest = segue.destination as? PlaylistViewController,
             let selectedIndex = tableView.indexPathsForSelectedRows?.first {
             
-                dest.playlist = playlists[selectedIndex.row]
+            // Pass over our playlist object that was selected
+            dest.playlist = playlists[selectedIndex.row]
             
         }
     }
     
-
+    
 }

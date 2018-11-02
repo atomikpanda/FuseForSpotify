@@ -35,10 +35,14 @@ class User: Mappable {
         _ = appDelegate.oauthswift!.client.get("https://api.spotify.com/v1/me", parameters: [:], headers: nil, success: { response in
 
             do {
+                // Get the json
                 let rootObj = try JSON(data: response.data)
 
                 if let userObject = rootObj.dictionaryObject {
+                    // Use ObjectMapper to map the response to a user object
                     if let user = User(JSON: userObject) {
+                        
+                        // Done. pass the user to the completion handler
                         completion(user)
                     }
                 }

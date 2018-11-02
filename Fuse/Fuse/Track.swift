@@ -32,6 +32,7 @@ class Track: Mappable {
     }
 }
 
+// Represents a track at a specific position
 struct TrackAtPosition {
     var track: Track
     var positions: [Int]

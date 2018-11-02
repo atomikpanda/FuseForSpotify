@@ -8,9 +8,6 @@
 
 import Foundation
 import ObjectMapper
-import Alamofire
-import AlamofireObjectMapper
-import OAuthSwiftAlamofire
 import OAuthSwift
 import SwiftyJSON
 
@@ -46,9 +43,13 @@ class Playlist: Mappable {
     
     func loadTracks(loaded: @escaping (Paging, [Track]?) -> Void) {
         guard let playlistId = id else { return }
+        
+        // Send the initial request to load the first 100 tracks
         _ = appDelegate.oauthswift!.client.get("https://api.spotify.com/v1/playlists/\(playlistId)/tracks", parameters: ["limit": "100", "offset": "0", "fields": "fields=items(track(name,href,artists))"], headers: nil, success: { response in
             
+            // Remove all old tracks
             self.tracks?.removeAll()
+            
             // Handle our tracks response
             self.handleTracksResponse(response: response, loaded: loaded)
             
@@ -62,6 +63,8 @@ class Playlist: Mappable {
     
     private func handleTracksResponse(response: OAuthSwiftResponse, loaded: @escaping (Paging, [Track]?) -> Void) {
         do {
+            
+            // Get the json from the response
             let rootObj = try JSON(data: response.data)
             
             // Get our paging object
@@ -77,6 +80,7 @@ class Playlist: Mappable {
                     if let trackProp = item["track"],
                         let trackDict = JSON(trackProp).dictionaryObject {
                         
+                        // Convert the json to a Track object
                         guard let track = Track(JSON: trackDict) else { continue }
                         tracks?.append(track)
                     }
@@ -86,6 +90,7 @@ class Playlist: Mappable {
                 loaded(paging, self.tracks)
                 
                 guard let next = paging.next else { return }
+                
                 // Handle next page
                 self.getNextTrack(next: next, loaded: loaded)
                 
@@ -101,6 +106,7 @@ class Playlist: Mappable {
     func deleteTracks(_ tracks: [TrackAtPosition], completion: @escaping ()->()) {
         guard let playlistId = id else { return }
         
+        // Formulate the json params
         var json = [[String: Any]]()
         for track in tracks {
             if let uri = track.track.uri {
@@ -110,10 +116,13 @@ class Playlist: Mappable {
         
         let requestData = ["tracks": json]
         
+        // Submit the request to delete the specified tracks
         _ = appDelegate.oauthswift!.client.request("https://api.spotify.com/v1/playlists/\(playlistId)/tracks", method: .DELETE,
-                                                             headers: ["Accept": "application/json", "Content-Type":"application/json"], body: try? JSON(requestData).rawData(), checkTokenExpiration: true, success: { (response) in
-                                                                // Handle response
-                                                                completion()
+                                                   headers: ["Accept": "application/json", "Content-Type":"application/json"], body: try? JSON(requestData).rawData(), checkTokenExpiration: true, success: { (response) in
+                                                    
+                                                    // Handle success
+                                                    completion()
+                                                    
         }) { (error) in
             appDelegate.oauthErrorHandler(error: error) {
                 // Retry this very method with the same params
@@ -125,6 +134,8 @@ class Playlist: Mappable {
     }
     
     private func getNextTrack(next: String, loaded: @escaping (Paging, [Track]?) -> Void) {
+        
+        // Gets the next items
         _ = appDelegate.oauthswift!.client.get(next, parameters: [:], headers: nil, success: { response in
             // Successfully got the next page so handle it
             self.handleTracksResponse(response: response, loaded: loaded)
@@ -141,6 +152,7 @@ class Playlist: Mappable {
     
     class func loadUserPlaylists(loaded: @escaping (Paging, [Playlist]?) -> Void) {
 
+        // Get the list of user playlists
         _ = appDelegate.oauthswift!.client.get("https://api.spotify.com/v1/me/playlists", parameters: ["limit": "50", "offset": "0"], headers: nil, success: { response in
             
             // Handle our playlist response
@@ -201,24 +213,32 @@ class Playlist: Mappable {
         }
     }
     
+    // Holds the uris that need to be submitted
+    
     var pendingUris: [[String]]?
     
     public func replaceTracksWithCurrent() {
         guard let playlistId = id, let allUris = self.urisFromTracks() else { return }
         
+        // Get the uris in batches of 100
         pendingUris = allUris.batches(by: 100)
         guard let firstBatch = self.pendingUris?.first else {return}
         
+        // Formulate json
         var json = [String: Any]()
         json["uris"] = firstBatch
         
+        // Debug print
         let requestData = json
         print("\n\n"+requestData.description+"\n\n")
         
         
         _ = appDelegate.oauthswift!.client.request("https://api.spotify.com/v1/playlists/\(playlistId)/tracks", method: .PUT,
                                                    headers: ["Accept": "application/json", "Content-Type":"application/json"], body: try? JSON(requestData).rawData(), checkTokenExpiration: true, success: { (response) in
+                                                    // Remove the batch that was completed
                                                     self.pendingUris?.removeFirst()
+                                                    
+                                                    // Submit the next request to load the next uris that were not in this batch
                                                    self.appendPendingTracksToPlaylist()
         }) { (error) in
             appDelegate.oauthErrorHandler(error: error) {
@@ -238,7 +258,9 @@ class Playlist: Mappable {
         
         _ = appDelegate.oauthswift!.client.request("https://api.spotify.com/v1/playlists/\(playlistId)/tracks", method: .POST,
                                                    headers: ["Accept": "application/json", "Content-Type":"application/json"], body: try? JSON(json).rawData(), checkTokenExpiration: true, success: { (response) in
+                                                    // Remove the batch that was completed
                                                     self.pendingUris?.removeFirst()
+                                                    // Submit the next request to load the next uris that were not in this batch
                                                     self.appendPendingTracksToPlaylist()
         }) { (error) in
             appDelegate.oauthErrorHandler(error: error) {
@@ -249,6 +271,7 @@ class Playlist: Mappable {
         }
     }
     
+    // Gets all uris from self.tracks
     private func urisFromTracks() -> [String]? {
         guard let allTracks = self.tracks else { return nil }
         var uris: [String] = []

@@ -13,12 +13,14 @@ extension Array {
     func batches(by chunkSize: Int) -> [[Element]] {
         var batches = [[Element]]()
 
+        // Find out how many batches we need and append
         for _ in 0 ..< Int(ceil(Double(count) / Double(chunkSize))) {
             batches.append([])
         }
 
         var batchIdx = 0
         for (i, item) in enumerated() {
+            // Determine when we should start adding the items to the next batch
             if i % chunkSize == 0 && i != 0 {
                 batchIdx += 1
             }
