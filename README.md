@@ -5,11 +5,12 @@
 ### Installation:
 
 1. Open the .xcworkspace file with Xcode
-2. Run the Xcode project on an iOS device or by using the iOS simulator.
+2. Ensure breakpoints are disabled under Debug->Deactivate Breakpoints in Xcode
+3. Run the Xcode project on an iOS device or by using the iOS simulator.
 
 
 
-#### Testing Login Details for Spotify:
+### Testing Login Details for Spotify:
 
 **Spotify Premium** Test Account
 
@@ -19,3 +20,8 @@
 
 Username: `lertzkih5jqkyfz14o6ocozvv`
 
+
+
+### Known Issues
+
+Sometimes the playlists list screen appears blank perhaps due to an inconsistent network connection. This can be fixed by pulling down to refresh when on the Your Playlist screen.
