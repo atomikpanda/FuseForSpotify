@@ -250,7 +250,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         // TODO: Delete this method
         rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
 //        centerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-//        navigationItem.rightBarButtonItem = nil
+        navigationItem.rightBarButtonItem = nil
     }
     
     @IBAction func doOperation(_ sender: AnyObject) {

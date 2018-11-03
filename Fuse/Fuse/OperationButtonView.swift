@@ -30,7 +30,7 @@ class OperationButtonView: UIView {
     }
     
     private func updateView() {
-        imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
+        
         if isSelected {
             imageView.tintColor = UIColor(named: "secondary")
             label.textColor = UIColor(named: "secondary")
@@ -43,6 +43,9 @@ class OperationButtonView: UIView {
 
     func setSelected(_ selected: Bool) {
         self.isSelected = selected
-        updateView()
+        UIView.animate(withDuration: 0.3) {
+            self.updateView()
+        }
+        
     }
 }

@@ -188,7 +188,7 @@
                                     <view contentMode="scaleToFill" verticalHuggingPriority="350" translatesAutoresizingMaskIntoConstraints="NO" id="GTA-hh-3vY" customClass="OperationButtonView" customModule="Fuse" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="115" height="56.5"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" image="intersectIcon" translatesAutoresizingMaskIntoConstraints="NO" id="TW2-bq-bqc">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" image="combineIcon" translatesAutoresizingMaskIntoConstraints="NO" id="TW2-bq-bqc">
                                                 <rect key="frame" x="0.0" y="0.0" width="115" height="23"/>
                                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </imageView>
@@ -728,6 +728,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="combineIcon" width="62" height="42"/>
         <image name="intersectIcon" width="62" height="42"/>
         <image name="operationIcon" width="25" height="25"/>
         <image name="splash" width="5184" height="3456"/>
