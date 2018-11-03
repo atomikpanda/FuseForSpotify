@@ -194,9 +194,14 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
             
             // Pass over our playlist object that was selected
             dest.playlist = playlists[selectedIndex.row]
+            dest.playlists = playlists
             
         }
     }
     
+    @IBAction func unwindToPlaylistList(_ unwindSegue: UIStoryboardSegue) {
+        
+        
+    }
     
 }

@@ -30,9 +30,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         oauthswift?.client.credential.load()
         
         // Customize UIKit appearance
-        UIView.appearance().tintColor = UIColor(named: "secondary")
+        UIControl.appearance().tintColor = UIColor(named: "secondary")
         UITableView.appearance().backgroundColor = UIColor(named: "primary")
         UITableView.appearance().separatorColor = .darkGray
+        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = UIColor(named: "secondary")
+        UIBarButtonItem.appearance().tintColor = UIColor(named: "secondary")
         
         
         return true

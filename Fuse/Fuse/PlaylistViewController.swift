@@ -15,11 +15,42 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var toolbar: UIToolbar!
     @IBOutlet weak var progressView: UIProgressView!
+    var playlists: [Playlist]?
     
     var playlist: Playlist?
     var tracks: [Track] = []
     var loadingTracks: [Track] = []
     var needsToUpdateRemote: Bool = false
+    
+    var leftBarButtonItem: UIBarButtonItem? {
+        get {
+            return toolbar.items?[0]
+        } set {
+            if let btn = newValue {
+                toolbar.items?[0] = btn
+            }
+        }
+    }
+    
+    var centerBarButtonItem: UIBarButtonItem? {
+        get {
+            return toolbar.items?[2]
+        } set {
+            if let btn = newValue {
+                toolbar.items?[2] = btn
+            }
+        }
+    }
+    
+    var rightBarButtonItem: UIBarButtonItem? {
+        get {
+            return toolbar.items?[4]
+        } set {
+            if let btn = newValue {
+                toolbar.items?[4] = btn
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +60,8 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.delegate = self
         
         self.title = playlist?.name
+        
+        disableTmpButtons()
         
         // Start loading the tracks
         loadData()
@@ -77,6 +110,11 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         print("loaded: \(self.loadingTracks.count) of \(paging.total ?? 0)")
         if self.loadingTracks.count == self.playlist?.numberOfTracks ?? 0 {
             self.finishedLoadingAllBatches()
+        } else {
+            self.tracks = loadingTracks
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
         
     }
@@ -179,9 +217,10 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             needsToUpdateRemote = false
             
             // Update toolbar items edit mode
-            toolbar.items?[2] = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-            toolbar.items?[0] = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(editTapped(_:)))
-            toolbar.items?[4] = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(trashTapped(_:)))
+            centerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+            leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(editTapped(_:)))
+            rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(trashTapped(_:)))
+            
         } else {
             // Now we are in normal mode
             
@@ -196,21 +235,28 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             self.needsToUpdateRemote = false
             
             // Update toolbar items for normal mdoe
-            toolbar.items?[0] = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editTapped(_:)))
+            leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editTapped(_:)))
             
-            toolbar.items?[2] = UIBarButtonItem(image: #imageLiteral(resourceName: "operationIcon"), style: .plain, target: self, action: #selector(doOperation(_:)))
+            centerBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "operationIcon"), style: .plain, target: self, action: #selector(doOperation(_:)))
             
-            toolbar.items?[4] = UIBarButtonItem(title: "Open Spotify", style: .plain, target: self, action: #selector(openSpotify(_:)))
+            rightBarButtonItem = UIBarButtonItem(title: "Open Spotify", style: .plain, target: self, action: #selector(openSpotify(_:)))
             
-            toolbar.items?[4] = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-            toolbar.items?[2] = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+            disableTmpButtons()
             
         }
+    }
+    
+    func disableTmpButtons() {
+        // TODO: Delete this method
+        rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+//        centerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        navigationItem.rightBarButtonItem = nil
     }
     
     @IBAction func doOperation(_ sender: AnyObject) {
         // Center button to show the operation view controller
         print("TODO: implement \(#function)")
+        performSegue(withIdentifier: "toOperation", sender: self)
     }
     
     @IBAction func trashTapped(_ sender: AnyObject) {
@@ -260,14 +306,15 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         present(alert, animated: true, completion: nil)
     }
     
-    /*
      // MARK: - Navigation
      
      // In a storyboard-based application, you will often want to do a little preparation before navigation
      override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
+        
+        if segue.identifier == "toOperation", let nav = segue.destination as? UINavigationController, let dest = nav.topViewController as? OperationViewController {
+            dest.playlists = playlists
+            dest.playlistA = self.playlist
+        }
      }
-     */
-    
+
 }
