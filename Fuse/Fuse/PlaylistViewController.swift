@@ -250,13 +250,17 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         // TODO: Delete this method
         rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
 //        centerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        navigationItem.rightBarButtonItem = nil
+//        navigationItem.rightBarButtonItem = nil
     }
     
     @IBAction func doOperation(_ sender: AnyObject) {
         // Center button to show the operation view controller
         print("TODO: implement \(#function)")
         performSegue(withIdentifier: "toOperation", sender: self)
+    }
+    
+    @IBAction func openStats(_ sender: AnyObject) {
+        performSegue(withIdentifier: "toStats", sender: self)
     }
     
     @IBAction func trashTapped(_ sender: AnyObject) {

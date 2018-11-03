@@ -605,7 +605,11 @@
                         <viewLayoutGuide key="safeArea" id="Ujn-U6-FQn"/>
                     </view>
                     <navigationItem key="navigationItem" title="Playlist Title" id="KcM-yn-yjD">
-                        <barButtonItem key="rightBarButtonItem" enabled="NO" image="statsIcon" id="kJc-6m-Uxb"/>
+                        <barButtonItem key="rightBarButtonItem" image="statsIcon" id="kJc-6m-Uxb">
+                            <connections>
+                                <action selector="openStats:" destination="fc6-lG-iWn" id="aJC-Cr-UlK"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="progressView" destination="PMe-v8-HOc" id="ZQt-ew-3If"/>
@@ -622,14 +626,48 @@
         <!--Playlist Stats-->
         <scene sceneID="UOM-XX-eyO">
             <objects>
-                <viewController id="rZs-WL-69F" sceneMemberID="viewController">
+                <viewController id="rZs-WL-69F" customClass="StatsViewController" customModule="Fuse" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2ZT-IN-GLo">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5au-Rc-J94">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="65" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5au-Rc-J94">
+                                <rect key="frame" x="0.0" y="74" width="375" height="593"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="statCell" rowHeight="65" id="Hsg-Lk-d71" customClass="StatTableViewCell" customModule="Fuse" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="65"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Hsg-Lk-d71" id="a85-iA-7ov">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zHF-vV-8Ix">
+                                                    <rect key="frame" x="15" y="43" width="345" height="2"/>
+                                                </progressView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stat Label: 100%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Crv-bG-2Hh">
+                                                    <rect key="frame" x="15" y="12" width="345" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" name="primary"/>
+                                            <constraints>
+                                                <constraint firstItem="zHF-vV-8Ix" firstAttribute="top" secondItem="Crv-bG-2Hh" secondAttribute="bottom" constant="10" id="3I0-5A-3L2"/>
+                                                <constraint firstAttribute="trailing" secondItem="Crv-bG-2Hh" secondAttribute="trailing" constant="15" id="6F7-4I-t62"/>
+                                                <constraint firstAttribute="trailing" secondItem="zHF-vV-8Ix" secondAttribute="trailing" constant="15" id="JT7-UA-lF2"/>
+                                                <constraint firstItem="zHF-vV-8Ix" firstAttribute="leading" secondItem="a85-iA-7ov" secondAttribute="leading" constant="15" id="NVD-3z-viD"/>
+                                                <constraint firstItem="Crv-bG-2Hh" firstAttribute="leading" secondItem="a85-iA-7ov" secondAttribute="leading" constant="15" id="UXI-OP-sRA"/>
+                                                <constraint firstItem="Crv-bG-2Hh" firstAttribute="top" secondItem="a85-iA-7ov" secondAttribute="top" constant="12" id="Z7v-Ec-EF7"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="progressView" destination="zHF-vV-8Ix" id="SA5-Ec-9SV"/>
+                                            <outlet property="statLabel" destination="Crv-bG-2Hh" id="OsU-OC-zna"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" name="primary"/>
@@ -637,11 +675,14 @@
                             <constraint firstItem="yV8-Hk-G8U" firstAttribute="trailing" secondItem="5au-Rc-J94" secondAttribute="trailing" id="Ewo-ms-w5d"/>
                             <constraint firstItem="yV8-Hk-G8U" firstAttribute="bottom" secondItem="5au-Rc-J94" secondAttribute="bottom" id="Oio-ch-EKd"/>
                             <constraint firstItem="5au-Rc-J94" firstAttribute="leading" secondItem="yV8-Hk-G8U" secondAttribute="leading" id="lef-2p-2fc"/>
-                            <constraint firstItem="5au-Rc-J94" firstAttribute="top" secondItem="yV8-Hk-G8U" secondAttribute="top" id="x0T-Cm-lof"/>
+                            <constraint firstItem="5au-Rc-J94" firstAttribute="top" secondItem="yV8-Hk-G8U" secondAttribute="top" constant="10" id="x0T-Cm-lof"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="yV8-Hk-G8U"/>
                     </view>
                     <navigationItem key="navigationItem" title="Playlist Stats" id="Nbg-39-DMf"/>
+                    <connections>
+                        <outlet property="tableView" destination="5au-Rc-J94" id="fZ4-C3-5R1"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3W4-uu-dQf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
