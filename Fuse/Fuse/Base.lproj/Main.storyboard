@@ -519,17 +519,9 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="hLT-Tq-2GL"/>
-                                    <barButtonItem image="operationIcon" style="plain" id="rmZ-9C-WxN">
-                                        <connections>
-                                            <action selector="doOperation:" destination="fc6-lG-iWn" id="RTc-r0-ouC"/>
-                                        </connections>
-                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="MEP-9t-CKe"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="hsq-cP-T3q"/>
-                                    <barButtonItem title="Open Spotify" id="d8Y-XQ-T5u">
-                                        <connections>
-                                            <action selector="openSpotify:" destination="fc6-lG-iWn" id="uyh-Tj-7zj"/>
-                                        </connections>
-                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="emW-Xs-Eru"/>
                                 </items>
                                 <color key="tintColor" name="secondary"/>
                             </toolbar>
@@ -604,13 +596,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Ujn-U6-FQn"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Playlist Title" id="KcM-yn-yjD">
-                        <barButtonItem key="rightBarButtonItem" image="statsIcon" id="kJc-6m-Uxb">
-                            <connections>
-                                <action selector="openStats:" destination="fc6-lG-iWn" id="aJC-Cr-UlK"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Playlist Title" id="KcM-yn-yjD"/>
                     <connections>
                         <outlet property="progressView" destination="PMe-v8-HOc" id="ZQt-ew-3If"/>
                         <outlet property="tableView" destination="5zY-eH-j1G" id="pTH-3h-Lda"/>
@@ -730,10 +716,8 @@
     <resources>
         <image name="combineIcon" width="62" height="42"/>
         <image name="intersectIcon" width="62" height="42"/>
-        <image name="operationIcon" width="25" height="25"/>
         <image name="splash" width="5184" height="3456"/>
         <image name="splashIcon" width="2048" height="2048"/>
-        <image name="statsIcon" width="25" height="25"/>
         <image name="subtractIcon" width="62" height="42"/>
         <image name="swapIcon" width="50" height="50"/>
         <namedColor name="cell">

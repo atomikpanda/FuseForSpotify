@@ -63,7 +63,11 @@ class OperationViewController: UIViewController {
     
     @objc func operationButtonSelected(gesture: UITapGestureRecognizer) {
         if let tappedButton = gesture.view as? OperationButtonView {
-            for button in [combineButton, intersectButton, subtractButton] {
+            var btns = [combineButton, intersectButton, subtractButton]
+            if let indexToRemove = btns.firstIndex(of: tappedButton) {
+                btns.remove(at: indexToRemove)
+            }
+            for button in btns {
                 button?.setSelected(false)
             }
             tappedButton.setSelected(true)

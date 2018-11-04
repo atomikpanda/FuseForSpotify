@@ -61,7 +61,12 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         
         self.title = playlist?.name
         
-        disableTmpButtons()
+        
+        #if MILESTONE3
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "statsIcon"), style: .plain, target: self, action: #selector(openStats(_:)))
+        #endif
+        
+        normalToolbarItems()
         
         // Start loading the tracks
         loadData()
@@ -83,6 +88,13 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func trackBatchDidLoad(_ paging: Paging, _ tracks: [Track]?) {
+        guard let loadedTracks = tracks else { return }
+        
+        AudioFeatures.loadFeatures(for: loadedTracks, completion: featureBatchDidLoad(_:))
+        
+    }
+    
+    func featureBatchDidLoad(_ tracks: [Track]?) {
         guard let loadedTracks = tracks else { return }
         
         self.loadingTracks.append(contentsOf: loadedTracks)
@@ -107,16 +119,16 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
         
-        print("loaded: \(self.loadingTracks.count) of \(paging.total ?? 0)")
+        print("loaded: \(self.loadingTracks.count) of \(playlist?.numberOfTracks ?? 0)")
         if self.loadingTracks.count == self.playlist?.numberOfTracks ?? 0 {
             self.finishedLoadingAllBatches()
         } else {
             self.tracks = loadingTracks
+            
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         }
-        
     }
     
     func finishedLoadingAllBatches() {
@@ -124,11 +136,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         self.loadingTracks.removeAll()
         
         // Start loading the audio features for each track
-//        AudioFeatures.loadFeatures(for: loadedTracks, completion: { (tracks) in
-//            
-//            
-//            
-//        })
+        
         DispatchQueue.main.async {
             
             self.tableView.reloadData()
@@ -166,7 +174,11 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         cell.artistLabel.text = track.artists?.first?.name
         
         // TODO: Milestone 2
+//        #if MILESTONE3
         cell.infoLabel.text = "\(Int(track.features?.tempo?.rounded() ?? 0))"
+//        #else
+//        cell.infoLabel.text = ""
+//        #endif
         
         return cell
     }
@@ -216,10 +228,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             // Now we are in edit mode
             needsToUpdateRemote = false
             
-            // Update toolbar items edit mode
-            centerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-            leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(editTapped(_:)))
-            rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(trashTapped(_:)))
+            editToolbarItems()
             
         } else {
             // Now we are in normal mode
@@ -234,23 +243,31 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             // Now that we've submitted the request we don't need to update again if the user presses the back button
             self.needsToUpdateRemote = false
             
-            // Update toolbar items for normal mdoe
-            leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editTapped(_:)))
-            
-            centerBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "operationIcon"), style: .plain, target: self, action: #selector(doOperation(_:)))
-            
-            rightBarButtonItem = UIBarButtonItem(title: "Open Spotify", style: .plain, target: self, action: #selector(openSpotify(_:)))
-            
-            disableTmpButtons()
+            normalToolbarItems()
             
         }
     }
     
-    func disableTmpButtons() {
-        // TODO: Delete this method
+    func editToolbarItems() {
+        // Update toolbar items edit mode
+        centerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(editTapped(_:)))
+        rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(trashTapped(_:)))
+    }
+    
+    func normalToolbarItems() {
+        // Update toolbar items for normal mdoe
+        leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editTapped(_:)))
+        
+        #if MILESTONE2
+        centerBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "operationIcon"), style: .plain, target: self, action: #selector(doOperation(_:)))
+        #endif
+        
+        #if MILESTONE3
+        rightBarButtonItem = UIBarButtonItem(title: "Open Spotify", style: .plain, target: self, action: #selector(openSpotify(_:)))
+        #else
         rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-//        centerBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        navigationItem.rightBarButtonItem = nil
+        #endif
     }
     
     @IBAction func doOperation(_ sender: AnyObject) {
