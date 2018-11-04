@@ -90,6 +90,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     func trackBatchDidLoad(_ paging: Paging, _ tracks: [Track]?) {
         guard let loadedTracks = tracks else { return }
         
+        // Load the audio features after we just loaded this batch
         AudioFeatures.loadFeatures(for: loadedTracks, completion: featureBatchDidLoad(_:))
         
     }
@@ -99,6 +100,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         
         self.loadingTracks.append(contentsOf: loadedTracks)
         
+        // Update the progress bar
         if let total = self.playlist?.numberOfTracks {
             let progress = Float(self.loadingTracks.count)/Float(total)
             DispatchQueue.main.async {
@@ -120,9 +122,13 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         print("loaded: \(self.loadingTracks.count) of \(playlist?.numberOfTracks ?? 0)")
+        
+        // Check if we are done loading everything
         if self.loadingTracks.count == self.playlist?.numberOfTracks ?? 0 {
             self.finishedLoadingAllBatches()
         } else {
+            // We are not done yet
+            // Set the tracks we have so far and reload the table view
             self.tracks = loadingTracks
             
             DispatchQueue.main.async {
@@ -173,12 +179,12 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         cell.trackLabel.text = track.name
         cell.artistLabel.text = track.artists?.first?.name
         
-        // TODO: Milestone 2
-//        #if MILESTONE3
+        // TODO: Milestone 3
+        #if MILESTONE3
         cell.infoLabel.text = "\(Int(track.features?.tempo?.rounded() ?? 0))"
-//        #else
-//        cell.infoLabel.text = ""
-//        #endif
+        #else
+        cell.infoLabel.text = ""
+        #endif
         
         return cell
     }
