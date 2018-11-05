@@ -200,8 +200,50 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     @IBAction func unwindToPlaylistList(_ unwindSegue: UIStoryboardSegue) {
+        if let source = unwindSegue.source as? OperationViewController, let user = self.currentUser, let name = source.newPlaylistName,
+            let a = source.playlistA, let b = source.playlistB {
+            
+            // Load the tracks
+            b.loadTracks(loaded: { (paging, tracks) in
+                guard let numberLoaded = b.tracks?.count, let numberOfTracks = b.numberOfTracks else {return}
+                
+                // If we now have all tracks
+                if numberLoaded == numberOfTracks {
+                    
+                    // Create new playlist
+                    Playlist.create(user: user, name: name, success: { playlist in
+                        
+                        // Call the callback method
+                        self.playlistWasCreated(playlist, operationToPerform: source.operationType, playlistA: a, playlistB: b)
+                    })
+                }
+            })
+        }
+    }
+    
+    func playlistWasCreated(_ newPlaylist: Playlist, operationToPerform: OperationType, playlistA: Playlist, playlistB: Playlist) {
         
+        var uris: [String] = []
         
+        switch operationToPerform {
+        case .combine:
+            if let aUris = playlistA.urisFromTracks(), let bUris = playlistB.urisFromTracks() {
+                print("COMBINE: \(playlistA.name!) with \(playlistB.name!)")
+                uris.append(contentsOf: aUris)
+                uris.append(contentsOf: bUris)
+            }
+            break
+        case .intersect:
+            
+            break
+        case .subtract:
+            break
+        }
+        
+        if uris.count > 0 {
+            newPlaylist.replaceTracksWithTracks(uris: uris)
+            loadData()
+        }
     }
     
 }

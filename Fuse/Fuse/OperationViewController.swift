@@ -41,7 +41,7 @@ class OperationViewController: UIViewController {
         return .combine
     }
     
-   
+    var newPlaylistName: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -119,6 +119,7 @@ class OperationViewController: UIViewController {
             if let textField = alert.textFields?.first,
                 let playlistTitle = textField.text,
                 playlistTitle.isEmpty == false {
+                self.newPlaylistName = playlistTitle
                 self.performSegue(withIdentifier: "unwindToPlaylistList", sender: self)
             }
         })
@@ -138,8 +139,6 @@ class OperationViewController: UIViewController {
             createAction?.isEnabled = false
         }
     }
-    
-    
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent

@@ -223,7 +223,11 @@ class Playlist: Mappable {
     var pendingUris: [[String]]?
     
     public func replaceTracksWithCurrent() {
-        guard let playlistId = id, let allUris = self.urisFromTracks() else { return }
+        replaceTracksWithTracks(uris: self.urisFromTracks())
+    }
+    
+    public func replaceTracksWithTracks(uris: [String]?) {
+        guard let playlistId = id, let allUris = uris else { return }
         
         // Get the uris in batches of 100
         pendingUris = allUris.batches(by: 100)
@@ -244,15 +248,14 @@ class Playlist: Mappable {
                                                     self.pendingUris?.removeFirst()
                                                     
                                                     // Submit the next request to load the next uris that were not in this batch
-                                                   self.appendPendingTracksToPlaylist()
+                                                    self.appendPendingTracksToPlaylist()
         }) { (error) in
             appDelegate.oauthErrorHandler(error: error) {
                 // Retry this very method with the same params
-                self.replaceTracksWithCurrent()
+                self.replaceTracksWithTracks(uris: uris)
                 return
             }
         }
-        
     }
     
     private func appendPendingTracksToPlaylist() {
@@ -277,7 +280,7 @@ class Playlist: Mappable {
     }
     
     // Gets all uris from self.tracks
-    private func urisFromTracks() -> [String]? {
+    public func urisFromTracks() -> [String]? {
         guard let allTracks = self.tracks else { return nil }
         var uris: [String] = []
         
@@ -287,5 +290,32 @@ class Playlist: Mappable {
         }
         
         return uris
+    }
+    
+    public class func create(user: User, name: String?, success: @escaping (Playlist)->()) {
+        guard let userId = user.id, let name = name else {return}
+        let json = ["name": name]
+        _ = appDelegate.oauthswift!.client.request("https://api.spotify.com/v1/users/\(userId)/playlists", method: .POST,
+                                                   headers: ["Accept": "application/json", "Content-Type":"application/json"], body: try? JSON(json).rawData(), checkTokenExpiration: true, success: { (response) in
+                                                    do {
+                                                        let rootObj = try JSON(data: response.data)
+                                                        
+                                                        // Get our paging object
+                                                        if let rootDict = rootObj.dictionaryObject {
+                                                            
+                                                            guard let plist = Playlist(JSON: rootDict) else { return }
+                                                            success(plist)
+                                                        }
+                                                        
+                                                    } catch {
+                                                        print("JSON ERROR: \(error.localizedDescription)")
+                                                    }
+        }) { (error) in
+            appDelegate.oauthErrorHandler(error: error) {
+                // Retry this very method with the same params
+                self.create(user: user, name: name, success: success)
+                return
+            }
+        }
     }
 }
