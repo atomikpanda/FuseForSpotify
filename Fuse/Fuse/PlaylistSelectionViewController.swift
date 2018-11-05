@@ -9,19 +9,35 @@
 import UIKit
 
 class PlaylistSelectionViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    // MARK: - Outlets
     @IBOutlet weak var tableView: UITableView!
+    
+    // The playlists to display
     var playlists: [Playlist] = []
+    
+    // The cell with a checkmark or nil for not selected yet
     var selectedIndexPath: IndexPath?
+    
+    // The playlist object that was selected
     var selectedPlaylist: Playlist?
+    
+    // The playlistA's name
     var playlistAName: String?
+    
+    // The operation with will be performed
     var operationType: OperationType?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set up the table view
         tableView.delegate = self
         tableView.dataSource = self
         
+        // Set up the prompt
+        // this helps the user understand what operation
+        // will be performed and with what playlists
         switch operationType {
         case .some(.combine):
             navigationItem.prompt = "Choose a playlist to combine \(playlistAName ?? "") with..."
@@ -32,12 +48,15 @@ class PlaylistSelectionViewController: UIViewController, UITableViewDataSource, 
         default:
             break
         }
-        // Do any additional setup after loading the view.
+        
     }
     
     @IBAction func cancelTapped(_ sender: AnyObject) {
+        // Cancel the whole operation
         dismiss(animated: true, completion: nil)
     }
+    
+    // MARK: - Table View Data Source
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return playlists.count
@@ -53,6 +72,7 @@ class PlaylistSelectionViewController: UIViewController, UITableViewDataSource, 
         let numTracks = playlists[indexPath.row].numberOfTracks ?? 0
         cell.tracksLabel.text = "\(numTracks) Tracks"
         
+        // If this is the selected cell than show a checkmark
         if indexPath == selectedIndexPath {
             cell.accessoryType = .checkmark
         } else {
@@ -64,27 +84,35 @@ class PlaylistSelectionViewController: UIViewController, UITableViewDataSource, 
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        // If the same cell was reselected, do nothing
         guard indexPath != selectedIndexPath else {return}
         
-        
+        // Save the selected playlist
         selectedPlaylist = playlists[indexPath.row]
         
+        // If it's selected then show a checkmark
         if let cell = tableView.cellForRow(at: indexPath) {
             cell.accessoryType = .checkmark
         }
         
+        // If we have a previous cell
+        // we need to deselect it
         if let prevIndexPath = selectedIndexPath,  let prevCell = tableView.cellForRow(at: prevIndexPath) {
             prevCell.accessoryType = .none
         }
         
+        // Save the indexPath that was selected
         selectedIndexPath = indexPath
         
         tableView.deselectRow(at: indexPath, animated: true)
         
+        // Check if we should enable the done button
         checkForDone()
     }
     
     func checkForDone() {
+        
+        // If we have a selection then enable the done button
         if selectedPlaylist != nil {
             navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped(_:)))
         } else {
@@ -94,6 +122,8 @@ class PlaylistSelectionViewController: UIViewController, UITableViewDataSource, 
     }
     
     @objc func doneTapped(_ sender: Any?) {
+        // Go back to the operation screen
+        // now that we have all of our data
         performSegue(withIdentifier: "unwindToOperation", sender: self)
     }
     
