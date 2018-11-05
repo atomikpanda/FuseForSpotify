@@ -12,39 +12,29 @@ import OAuthSwift
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    // MARK: - Instance Variables
     var window: UIWindow?
     var oauthswift: OAuth2Swift?
     var alert: UIAlertController?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
         // Create our authentication manager
-        oauthswift = OAuth2Swift(
-            consumerKey:    "b798e6bd7c154a6497778e08d58bd938",
-            consumerSecret: "d4227806dfdf497ca1934511abd31178",
-            authorizeUrl:   "https://accounts.spotify.com/authorize",
-            accessTokenUrl: "https://accounts.spotify.com/api/token",
-            responseType:   "code"
-        )
-        
-        // Read all saved values
-        oauthswift?.client.credential.load()
-        
+        setupOAuth()
+
         // Customize UIKit appearance
-        UIControl.appearance().tintColor = UIColor(named: "secondary")
-        UITableView.appearance().backgroundColor = UIColor(named: "primary")
-        UITableView.appearance().separatorColor = .darkGray
-        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = UIColor(named: "secondary")
-        UIBarButtonItem.appearance().tintColor = UIColor(named: "secondary")
-        
-        
+        setupAppearance()
+
         return true
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        
         // Handle the spotify callback
         if url.host == "oauth-callback" {
             OAuthSwift.handle(url: url)
         }
+        
         return true
     }
     
@@ -71,33 +61,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func oauthErrorHandler(error: OAuthSwiftError, afterRefresh: (()->())?=nil) {
+        
+        // An error occurred with the request
         print("OAUTH Request Error: \(error.localizedDescription)")
         
+        // Get the error details
         if case .requestError = error,
             let err = error.errorUserInfo["error"] as? NSError {
             
             // No network
             if err.code == -1009 {
-                
-                DispatchQueue.main.async {
-                    // Create an alert
-                    if self.alert == nil {
-                        self.alert = UIAlertController(title: "Failed to load.", message: err.localizedDescription, preferredStyle: .alert)
-                        
-                        self.alert?.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-                            
-                            // Post the notification
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "failedToLoad"), object: nil, userInfo: nil)
-                            self.alert = nil
-                        }))
-                        
-                        // Present the alert
-                        self.window?.rootViewController?.present(self.alert!, animated: true, completion: nil)
-                    }
-                }
+                showErrorAlert(error: err)
             }
         }
-        
         
         
         if case .tokenExpired = error {
@@ -126,4 +102,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+    func showErrorAlert(error: NSError) {
+        DispatchQueue.main.async {
+            // Create an alert
+            if self.alert == nil {
+                self.alert = UIAlertController(title: "Failed to load.", message: error.localizedDescription, preferredStyle: .alert)
+                
+                self.alert?.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+                    
+                    // Post the notification
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "failedToLoad"), object: nil, userInfo: nil)
+                    self.alert = nil
+                }))
+                
+                // Present the alert
+                self.window?.rootViewController?.present(self.alert!, animated: true, completion: nil)
+            }
+        }
+    }
 }

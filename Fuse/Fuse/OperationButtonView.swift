@@ -10,18 +10,12 @@ import UIKit
 
 class OperationButtonView: UIView {
 
+    // MARK: - Outlets & Vars
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var label: UILabel!
     
+    // Represents whether or not the button is selected
     private(set) var isSelected: Bool = false
-    
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -32,6 +26,7 @@ class OperationButtonView: UIView {
     private func updateView() {
         
         if isSelected {
+            // Use primary tint color
             imageView.tintColor = UIColor(named: "secondary")
             label.textColor = UIColor(named: "secondary")
         } else {
@@ -43,6 +38,8 @@ class OperationButtonView: UIView {
 
     func setSelected(_ selected: Bool) {
         self.isSelected = selected
+        
+        // Animate the update
         UIView.animate(withDuration: 0.3) {
             self.updateView()
         }
