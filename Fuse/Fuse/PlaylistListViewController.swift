@@ -19,6 +19,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     var currentUser: User?
     let reachability = Reachability()!
     var isReachable: Bool = false
+    let session = URLSession(configuration: .default)
     
     // MARK: - View Lifecycle
     
@@ -151,7 +152,6 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         if let imageURLString = playlists[indexPath.row].images?.last?.url,
             let imageURL = URL(string: imageURLString) {
             
-            let session = URLSession.shared
             let task = session.dataTask(with: URLRequest(url: imageURL)){ (data, response, error) in
                 guard let data = data else {return}
                 DispatchQueue.main.async {
