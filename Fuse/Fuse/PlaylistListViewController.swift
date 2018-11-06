@@ -141,11 +141,25 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell", for: indexPath) as! PlaylistTableViewCell
         
         guard playlists.count > indexPath.row else { return cell}
-    
+        
         // Configure cell
         cell.playlistTitleLabel.text = playlists[indexPath.row].name
         let numTracks = playlists[indexPath.row].numberOfTracks ?? 0
         cell.tracksLabel.text = "\(numTracks) Tracks"
+        
+        cell.playlistImageView.image = #imageLiteral(resourceName: "playlistPlaceholder")
+        if let imageURLString = playlists[indexPath.row].images?.last?.url,
+            let imageURL = URL(string: imageURLString) {
+            
+            let session = URLSession.shared
+            let task = session.dataTask(with: URLRequest(url: imageURL)){ (data, response, error) in
+                guard let data = data else {return}
+                DispatchQueue.main.async {
+                    cell.playlistImageView.image = UIImage(data: data)
+                }
+            }
+            task.resume()
+        }
         
         return cell
     }

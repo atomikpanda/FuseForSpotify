@@ -12,6 +12,7 @@ class PlaylistTableViewCell: UITableViewCell {
 
     @IBOutlet weak var playlistTitleLabel: UILabel!
     @IBOutlet weak var tracksLabel: UILabel!
+    @IBOutlet weak var playlistImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
