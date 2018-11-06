@@ -204,6 +204,15 @@ class OperationViewController: UIViewController {
             
             // Pass the data over
             dest.playlists = actualPlaylists
+            
+            dest.playlists = dest.playlists.filter { (playlist) -> Bool in
+                guard let a = self.playlistA else {return true}
+                if playlist.id == a.id {
+                    return false
+                }
+                return true
+            }
+            
             dest.operationType = operationType
             dest.playlistAName = playlistA?.name
         }
