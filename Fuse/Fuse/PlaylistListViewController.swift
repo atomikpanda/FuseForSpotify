@@ -96,13 +96,18 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     func doneLoadingUser(_ user: User) {
         self.currentUser = user
         
+        // Make sure we have our user data first
+        // so then we load the playlists in batches
         Playlist.loadUserPlaylists(loaded: loadedPlaylistBatch(_:_:))
     }
     
     func loadedPlaylistBatch(_ paging: Paging, _ playlists: [Playlist]?) {
+        
         if let loadedPlaylists = playlists {
+            // Add the playlists we just loaded to our loaded playlists array
             self.loadingPlaylists.append(contentsOf: loadedPlaylists)
             
+            // Check if we have loaded all batches
             if self.loadingPlaylists.count == paging.total ?? 0 {
                 finishedLoadingAllBatches()
             }
@@ -111,11 +116,12 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     
     func finishedLoadingAllBatches() {
         
-        // Only current user's
+        // Only current user's own playlists
         self.loadingPlaylists = self.loadingPlaylists.filter({ (aPlaylist) -> Bool in
             return aPlaylist.owner?.id == self.currentUser?.id
         })
         
+        // Load it into our Table View's data source and clear the loading array
         self.playlists = loadingPlaylists
         self.loadingPlaylists.removeAll()
         
@@ -145,7 +151,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        // Go to the tracks for this playlist
         if shouldPerformSegue(withIdentifier: "toTracks", sender: self) {
             performSegue(withIdentifier: "toTracks", sender: self)
         }
@@ -168,6 +174,8 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     // MARK: - Navigation
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        
+        // Check to make sure we don't show the tracks if we don't have a connection or proper data
         if identifier == "toTracks", let selectedIndex = tableView.indexPathsForSelectedRows?.first {
             if self.isReachable == false || !(playlists.count > selectedIndex.row) {
                 
@@ -203,7 +211,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         if let source = unwindSegue.source as? OperationViewController, let user = self.currentUser, let name = source.newPlaylistName,
             let a = source.playlistA, let b = source.playlistB {
             
-            // Load the tracks
+            // Load the tracks in playlist B
             b.loadTracks(loaded: { (paging, tracks) in
                 guard let numberLoaded = b.tracks?.count, let numberOfTracks = b.numberOfTracks else {return}
                 
