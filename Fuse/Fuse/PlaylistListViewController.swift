@@ -242,16 +242,36 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
             }
             break
         case .intersect:
-            
+            if let aUris = playlistA.urisFromTracks(), let bUris = playlistB.urisFromTracks() {
+                print("INTERSECT: \(playlistA.name!) with \(playlistB.name!)")
+                // If we find a uri that exists in A and B
+                for uri in aUris {
+                    if bUris.contains(uri) {
+                        // Append it
+                        uris.append(uri)
+                    }
+                }
+            }
             break
         case .subtract:
+            if let aUris = playlistA.urisFromTracks(), let bUris = playlistB.urisFromTracks() {
+                print("SUBTRACT B:\(playlistB.name!) from A: \(playlistA.name!)")
+                for uri in aUris {
+                    // If it doesn't exist in playlist B, then we can append it
+                    if bUris.contains(uri) == false {
+                        uris.append(uri)
+                    }
+                }
+            }
             break
         }
         
+        // There's no need to submit the request if we don't have anything to add
         if uris.count > 0 {
             newPlaylist.replaceTracksWithTracks(uris: uris)
-            loadData()
         }
+        
+        loadData()
     }
     
 }

@@ -36,6 +36,7 @@
 		66D01712218E2B7A003D3D87 /* Stat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D01711218E2B7A003D3D87 /* Stat.swift */; };
 		66D017142190F8F7003D3D87 /* AppDelegate+Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D017132190F8F7003D3D87 /* AppDelegate+Authentication.swift */; };
 		66D017162190F9C8003D3D87 /* AppDelegate+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D017152190F9C8003D3D87 /* AppDelegate+Appearance.swift */; };
+		66D017182191F325003D3D87 /* SpotifyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D017172191F325003D3D87 /* SpotifyImage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		66D01711218E2B7A003D3D87 /* Stat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stat.swift; sourceTree = "<group>"; };
 		66D017132190F8F7003D3D87 /* AppDelegate+Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+Authentication.swift"; sourceTree = "<group>"; };
 		66D017152190F9C8003D3D87 /* AppDelegate+Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+Appearance.swift"; sourceTree = "<group>"; };
+		66D017172191F325003D3D87 /* SpotifyImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyImage.swift; sourceTree = "<group>"; };
 		94EB69D145975A37518E2DA4 /* Pods-Fuse.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Fuse.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Fuse/Pods-Fuse.debug.xcconfig"; sourceTree = "<group>"; };
 		C1BD12C76A2459476B5C397E /* Pods-Fuse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Fuse.release.xcconfig"; path = "Pods/Target Support Files/Pods-Fuse/Pods-Fuse.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -139,6 +141,7 @@
 				6677146B2187990D00AFDA80 /* Track.swift */,
 				668D326E21891F330013DA4B /* Artist.swift */,
 				6677146D2187991200AFDA80 /* Playlist.swift */,
+				66D017172191F325003D3D87 /* SpotifyImage.swift */,
 				667714702187994F00AFDA80 /* AudioFeatures.swift */,
 				667714722187A06400AFDA80 /* Paging.swift */,
 				668D3274218B411F0013DA4B /* ReorderManager.swift */,
@@ -319,6 +322,7 @@
 				667714712187994F00AFDA80 /* AudioFeatures.swift in Sources */,
 				668D3279218CE14C0013DA4B /* OperationButtonView.swift in Sources */,
 				668D327321894BC40013DA4B /* Array+Batch.swift in Sources */,
+				66D017182191F325003D3D87 /* SpotifyImage.swift in Sources */,
 				66D017162190F9C8003D3D87 /* AppDelegate+Appearance.swift in Sources */,
 				66AC399B2188AC98000FC6C3 /* PlaylistListViewController.swift in Sources */,
 				668D326B2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift in Sources */,

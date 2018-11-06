@@ -26,6 +26,7 @@ class Playlist: Mappable {
     var tracks: [Track]? = []
     var uri: String?
     var owner: User?
+    var images: [SpotifyImage]?
     
     required init?(map: Map) {
         
@@ -37,6 +38,7 @@ class Playlist: Mappable {
         numberOfTracks <- map["tracks.total"]
         uri <- map["uri"]
         owner <- map["owner"]
+        images <- map["images"]
     }
     
     // MARK: - Track Loading
