@@ -5,6 +5,8 @@
 //  Created by Bailey Seymour on 10/29/18.
 //  Copyright © 2018 Bailey Seymour. All rights reserved.
 //
+// Bailey Seymour
+// DVP4 1811
 
 import UIKit
 import OAuthSwift
