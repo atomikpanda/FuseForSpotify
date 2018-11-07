@@ -256,6 +256,8 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
                         
                         // Call the callback method
                         self.playlistWasCreated(playlist, operationToPerform: source.operationType, playlistA: a, playlistB: b)
+                    }, failure: {
+                        self.refreshControl.endRefreshing()
                     })
                 }
             })
@@ -302,6 +304,8 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         // There's no need to submit the request if we don't have anything to add
         if uris.count > 0 {
             newPlaylist.replaceTracksWithTracks(uris: uris, replaceFinished: {
+                self.loadData()
+            }, replaceFailed: {
                 self.loadData()
             })
         } else {

@@ -229,10 +229,10 @@ class Playlist: Mappable {
     var pendingUris: [[String]]?
     
     public func replaceTracksWithCurrent() {
-        replaceTracksWithTracks(uris: self.urisFromTracks(), replaceFinished: nil)
+        replaceTracksWithTracks(uris: self.urisFromTracks(), replaceFinished: nil, replaceFailed: nil)
     }
     
-    public func replaceTracksWithTracks(uris: [String]?, replaceFinished: (()->())?=nil) {
+    public func replaceTracksWithTracks(uris: [String]?, replaceFinished: (()->())?=nil, replaceFailed: (()->())?=nil) {
         guard let playlistId = id, let allUris = uris else { return }
         
         // Get the uris in batches of 100
@@ -258,17 +258,22 @@ class Playlist: Mappable {
                                                     }
                                                     
                                                     // Submit the next request to load the next uris that were not in this batch
-                                                    self.appendPendingTracksToPlaylist(replaceFinished: replaceFinished)
+                                                    self.appendPendingTracksToPlaylist(replaceFinished: replaceFinished, replaceFailed: replaceFailed)
         }) { (error) in
-            appDelegate.oauthErrorHandler(error: error) {
-                // Retry this very method with the same params
-                self.replaceTracksWithTracks(uris: uris, replaceFinished: replaceFinished)
-                return
+            if case .tokenExpired = error {
+                appDelegate.oauthErrorHandler(error: error) {
+                    // Retry this very method with the same params
+                    self.replaceTracksWithTracks(uris: uris, replaceFinished: replaceFinished, replaceFailed: replaceFailed)
+                    return
+                }
+            } else {
+                replaceFailed?()
             }
+            
         }
     }
     
-    private func appendPendingTracksToPlaylist(replaceFinished: (()->())?=nil) {
+    private func appendPendingTracksToPlaylist(replaceFinished: (()->())?=nil, replaceFailed: (()->())?=nil) {
         guard let playlistId = id, let uris = pendingUris?.first else { return }
         
         var json = [String: Any]()
@@ -283,12 +288,16 @@ class Playlist: Mappable {
                                                         replaceFinished?()
                                                     }
                                                     // Submit the next request to load the next uris that were not in this batch
-                                                    self.appendPendingTracksToPlaylist(replaceFinished: replaceFinished)
+                                                    self.appendPendingTracksToPlaylist(replaceFinished: replaceFinished, replaceFailed: replaceFailed)
         }) { (error) in
-            appDelegate.oauthErrorHandler(error: error) {
-                // Retry this very method with the same params
-                self.appendPendingTracksToPlaylist(replaceFinished: replaceFinished)
-                return
+            if case .tokenExpired = error {
+                appDelegate.oauthErrorHandler(error: error) {
+                    // Retry this very method with the same params
+                    self.appendPendingTracksToPlaylist(replaceFinished: replaceFinished, replaceFailed: replaceFailed)
+                    return
+                }
+            } else {
+                replaceFailed?()
             }
         }
     }
@@ -306,7 +315,7 @@ class Playlist: Mappable {
         return uris
     }
     
-    public class func create(user: User, name: String?, success: @escaping (Playlist)->()) {
+    public class func create(user: User, name: String?, success: @escaping (Playlist)->(), failure: @escaping ()->()) {
         guard let userId = user.id, let name = name else {return}
         let json = ["name": name]
         _ = appDelegate.oauthswift!.client.request("https://api.spotify.com/v1/users/\(userId)/playlists", method: .POST,
@@ -325,10 +334,15 @@ class Playlist: Mappable {
                                                         print("JSON ERROR: \(error.localizedDescription)")
                                                     }
         }) { (error) in
+            if case .tokenExpired = error {
+                
             appDelegate.oauthErrorHandler(error: error) {
                 // Retry this very method with the same params
-                self.create(user: user, name: name, success: success)
+                self.create(user: user, name: name, success: success, failure: failure)
                 return
+            }
+            } else {
+                failure()
             }
         }
     }
