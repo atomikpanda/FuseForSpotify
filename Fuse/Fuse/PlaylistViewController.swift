@@ -209,6 +209,8 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             header.privacyImageView.image = #imageLiteral(resourceName: "privacyPrivateIcon")
         }
         
+        guard header.playlistImageView.image == #imageLiteral(resourceName: "playlistPlaceholderLarge") else { return header }
+        
         header.playlistImageView.image = #imageLiteral(resourceName: "playlistPlaceholderLarge")
         var imageURL: URL? = nil
         
