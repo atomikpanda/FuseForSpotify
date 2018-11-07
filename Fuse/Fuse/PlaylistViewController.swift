@@ -23,6 +23,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     var tracks: [Track] = []
     var loadingTracks: [Track] = []
     var needsToUpdateRemote: Bool = false
+    let session = URLSession(configuration: .default)
     
     var leftBarButtonItem: UIBarButtonItem? {
         get {
@@ -57,12 +58,15 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let headerNib = UINib(nibName: "PlaylistHeaderView", bundle: Bundle.main)
+        tableView.register(headerNib, forHeaderFooterViewReuseIdentifier: "playlistHeaderCell")
+        
         // Set up table view
         tableView.dataSource = self
         tableView.delegate = self
         
         self.title = playlist?.name
-        
+        self.title = ""
         
         #if MILESTONE3
             navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "statsIcon"), style: .plain, target: self, action: #selector(openStats(_:)))
@@ -191,6 +195,46 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         return cell
     }
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "playlistHeaderCell") as! PlaylistHeaderViewCell
+        
+        header.titleLabel.text = self.playlist?.name
+        header.tracksLabel.text = "\(self.tracks.count) Tracks"
+        
+        if let isPublic = self.playlist?.isPublic {
+            header.privacyLabel.text = isPublic ? "Public" : "Private"
+            header.privacyImageView.image = isPublic ? #imageLiteral(resourceName: "privacyPublicIcon") : #imageLiteral(resourceName: "privacyPrivateIcon")
+        } else {
+            header.privacyLabel.text = "Private"
+            header.privacyImageView.image = #imageLiteral(resourceName: "privacyPrivateIcon")
+        }
+        
+        header.playlistImageView.image = #imageLiteral(resourceName: "playlistPlaceholderLarge")
+        var imageURL: URL? = nil
+        
+        if self.playlist?.images?.count ?? 0 > 1, let imageURLString = self.playlist?.images?[1].url
+        {
+            imageURL = URL(string: imageURLString)
+            
+        } else if self.playlist?.images?.count ?? 0 > 0, let imageURLString = self.playlist?.images?.first?.url
+        {
+            imageURL = URL(string: imageURLString)
+        }
+        
+        if let url = imageURL {
+            let task = session.dataTask(with: URLRequest(url: url)){ (data, response, error) in
+                guard let data = data else {return}
+                DispatchQueue.main.async {
+                    header.playlistImageView.image = UIImage(data: data)
+                }
+            }
+            task.resume()
+        }
+        
+        
+        return header
+    }
+    
     // MARK: - Editing / Swipe to Delete
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -280,7 +324,6 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBAction func doOperation(_ sender: AnyObject) {
         // Center button to show the operation view controller
-        print("TODO: implement \(#function)")
         performSegue(withIdentifier: "toOperation", sender: self)
     }
     

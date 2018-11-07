@@ -37,6 +37,8 @@
 		66D017142190F8F7003D3D87 /* AppDelegate+Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D017132190F8F7003D3D87 /* AppDelegate+Authentication.swift */; };
 		66D017162190F9C8003D3D87 /* AppDelegate+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D017152190F9C8003D3D87 /* AppDelegate+Appearance.swift */; };
 		66D017182191F325003D3D87 /* SpotifyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D017172191F325003D3D87 /* SpotifyImage.swift */; };
+		66D0171A21923784003D3D87 /* PlaylistHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 66D0171921923784003D3D87 /* PlaylistHeaderView.xib */; };
+		66D0171C21924DA0003D3D87 /* PlaylistHeaderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D0171B21924DA0003D3D87 /* PlaylistHeaderViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +74,8 @@
 		66D017132190F8F7003D3D87 /* AppDelegate+Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+Authentication.swift"; sourceTree = "<group>"; };
 		66D017152190F9C8003D3D87 /* AppDelegate+Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+Appearance.swift"; sourceTree = "<group>"; };
 		66D017172191F325003D3D87 /* SpotifyImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyImage.swift; sourceTree = "<group>"; };
+		66D0171921923784003D3D87 /* PlaylistHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaylistHeaderView.xib; sourceTree = "<group>"; };
+		66D0171B21924DA0003D3D87 /* PlaylistHeaderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistHeaderViewCell.swift; sourceTree = "<group>"; };
 		94EB69D145975A37518E2DA4 /* Pods-Fuse.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Fuse.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Fuse/Pods-Fuse.debug.xcconfig"; sourceTree = "<group>"; };
 		C1BD12C76A2459476B5C397E /* Pods-Fuse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Fuse.release.xcconfig"; path = "Pods/Target Support Files/Pods-Fuse/Pods-Fuse.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -127,6 +131,7 @@
 				668D327A218CE1570013DA4B /* Views */,
 				668D32692188E6A50013DA4B /* Extensions */,
 				6677145D2187977200AFDA80 /* Main.storyboard */,
+				66D0171921923784003D3D87 /* PlaylistHeaderView.xib */,
 				667714602187977200AFDA80 /* Assets.xcassets */,
 				667714622187977200AFDA80 /* LaunchScreen.storyboard */,
 				667714652187977200AFDA80 /* Info.plist */,
@@ -188,6 +193,7 @@
 				66D0170B218DDD73003D3D87 /* PlaylistSelectionTableViewCell.swift */,
 				668D3270218921E50013DA4B /* TrackTableViewCell.swift */,
 				66D0170D218E2A03003D3D87 /* StatTableViewCell.swift */,
+				66D0171B21924DA0003D3D87 /* PlaylistHeaderViewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -261,6 +267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				667714642187977200AFDA80 /* LaunchScreen.storyboard in Resources */,
+				66D0171A21923784003D3D87 /* PlaylistHeaderView.xib in Resources */,
 				667714612187977200AFDA80 /* Assets.xcassets in Resources */,
 				6677145F2187977200AFDA80 /* Main.storyboard in Resources */,
 			);
@@ -335,6 +342,7 @@
 				668D326F21891F330013DA4B /* Artist.swift in Sources */,
 				66D01710218E2AFC003D3D87 /* StatsViewController.swift in Sources */,
 				667714732187A06400AFDA80 /* Paging.swift in Sources */,
+				66D0171C21924DA0003D3D87 /* PlaylistHeaderViewCell.swift in Sources */,
 				6677146C2187990D00AFDA80 /* Track.swift in Sources */,
 				668D327C218DD2450013DA4B /* RoundedButton.swift in Sources */,
 				66D0170C218DDD73003D3D87 /* PlaylistSelectionTableViewCell.swift in Sources */,

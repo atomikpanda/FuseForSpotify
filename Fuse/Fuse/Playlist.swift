@@ -29,6 +29,7 @@ class Playlist: Mappable {
     var uri: String?
     var owner: User?
     var images: [SpotifyImage]?
+    var isPublic: Bool?
     
     required init?(map: Map) {
         
@@ -41,6 +42,7 @@ class Playlist: Mappable {
         uri <- map["uri"]
         owner <- map["owner"]
         images <- map["images"]
+        isPublic <- map["public"]
     }
     
     // MARK: - Track Loading
