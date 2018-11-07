@@ -22,7 +22,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     let reachability = Reachability()!
     var isReachable: Bool = false
     let session = URLSession(configuration: .default)
-    
+    var shouldBeginRefreshing = false
     // MARK: - View Lifecycle
     
     override func viewDidLoad() {
@@ -32,6 +32,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         tableView.dataSource = self
         tableView.delegate = self
         tableView.refreshControl = refreshControl
+        refreshControl.tintColor = .lightGray
         
         reachability.whenReachable = { reachability in
             if reachability.connection != .none {
@@ -48,6 +49,9 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
             }
             else {
                 self.isReachable = false
+                if self.refreshControl.isRefreshing {
+                    self.refreshControl.endRefreshing()
+                }
             }
         }
         
@@ -58,6 +62,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         }
         
         refreshControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
+        shouldBeginRefreshing = true
         
         loadData()
     }
@@ -68,6 +73,18 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         NotificationCenter.default.removeObserver(self)
         NotificationCenter.default.addObserver(self, selector: #selector(failedToLoad),
                                                name: NSNotification.Name(rawValue: "failedToLoad"), object: nil)
+        
+        if shouldBeginRefreshing {
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                self.tableView.setContentOffset(CGPoint(x: 0, y: -1), animated: false)
+                self.tableView.setContentOffset(CGPoint(x: 0, y: 0-self.refreshControl.frame.size.height), animated: true)
+            }, completion: { _ in
+                self.refreshControl.beginRefreshing()
+                self.shouldBeginRefreshing = false
+            })
+            
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -85,7 +102,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     @objc func failedToLoad() {
-        print("refceived")
+        print("received")
         refreshControl.endRefreshing()
     }
     
@@ -227,13 +244,13 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         if let source = unwindSegue.source as? OperationViewController, let user = self.currentUser, let name = source.newPlaylistName,
             let a = source.playlistA, let b = source.playlistB {
             
+            shouldBeginRefreshing = true
             // Load the tracks in playlist B
             b.loadTracks(loaded: { (paging, tracks) in
                 guard let numberLoaded = b.tracks?.count, let numberOfTracks = b.numberOfTracks else {return}
                 
                 // If we now have all tracks
                 if numberLoaded == numberOfTracks {
-                    
                     // Create new playlist
                     Playlist.create(user: user, name: name, success: { playlist in
                         
@@ -284,10 +301,14 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         
         // There's no need to submit the request if we don't have anything to add
         if uris.count > 0 {
-            newPlaylist.replaceTracksWithTracks(uris: uris)
+            newPlaylist.replaceTracksWithTracks(uris: uris, replaceFinished: {
+                self.loadData()
+            })
+        } else {
+            loadData()
         }
         
-        loadData()
+        
     }
     
 }

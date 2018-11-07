@@ -229,10 +229,10 @@ class Playlist: Mappable {
     var pendingUris: [[String]]?
     
     public func replaceTracksWithCurrent() {
-        replaceTracksWithTracks(uris: self.urisFromTracks())
+        replaceTracksWithTracks(uris: self.urisFromTracks(), replaceFinished: nil)
     }
     
-    public func replaceTracksWithTracks(uris: [String]?) {
+    public func replaceTracksWithTracks(uris: [String]?, replaceFinished: (()->())?=nil) {
         guard let playlistId = id, let allUris = uris else { return }
         
         // Get the uris in batches of 100
@@ -253,18 +253,22 @@ class Playlist: Mappable {
                                                     // Remove the batch that was completed
                                                     self.pendingUris?.removeFirst()
                                                     
+                                                    if self.pendingUris?.count == 0 {
+                                                        replaceFinished?()
+                                                    }
+                                                    
                                                     // Submit the next request to load the next uris that were not in this batch
-                                                    self.appendPendingTracksToPlaylist()
+                                                    self.appendPendingTracksToPlaylist(replaceFinished: replaceFinished)
         }) { (error) in
             appDelegate.oauthErrorHandler(error: error) {
                 // Retry this very method with the same params
-                self.replaceTracksWithTracks(uris: uris)
+                self.replaceTracksWithTracks(uris: uris, replaceFinished: replaceFinished)
                 return
             }
         }
     }
     
-    private func appendPendingTracksToPlaylist() {
+    private func appendPendingTracksToPlaylist(replaceFinished: (()->())?=nil) {
         guard let playlistId = id, let uris = pendingUris?.first else { return }
         
         var json = [String: Any]()
@@ -274,12 +278,16 @@ class Playlist: Mappable {
                                                    headers: ["Accept": "application/json", "Content-Type":"application/json"], body: try? JSON(json).rawData(), checkTokenExpiration: true, success: { (response) in
                                                     // Remove the batch that was completed
                                                     self.pendingUris?.removeFirst()
+                                                    
+                                                    if self.pendingUris?.count == 0 {
+                                                        replaceFinished?()
+                                                    }
                                                     // Submit the next request to load the next uris that were not in this batch
-                                                    self.appendPendingTracksToPlaylist()
+                                                    self.appendPendingTracksToPlaylist(replaceFinished: replaceFinished)
         }) { (error) in
             appDelegate.oauthErrorHandler(error: error) {
                 // Retry this very method with the same params
-                self.appendPendingTracksToPlaylist()
+                self.appendPendingTracksToPlaylist(replaceFinished: replaceFinished)
                 return
             }
         }
