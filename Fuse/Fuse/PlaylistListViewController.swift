@@ -15,14 +15,25 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK: - Outlets
     @IBOutlet weak var tableView: UITableView!
+    
+    // Refresh
     let refreshControl: UIRefreshControl = UIRefreshControl()
+    var shouldBeginRefreshing = false
+    
+    // Playlists
     var playlists: [Playlist] = []
     var loadingPlaylists: [Playlist] = []
+    
+    // Our user
     var currentUser: User?
+    
+    // Reachability
     let reachability = Reachability()!
     var isReachable: Bool = false
+    
+    // For image loading
     let session = URLSession(configuration: .default)
-    var shouldBeginRefreshing = false
+    
     // MARK: - View Lifecycle
     
     override func viewDidLoad() {
@@ -34,32 +45,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         tableView.refreshControl = refreshControl
         refreshControl.tintColor = .lightGray
         
-        reachability.whenReachable = { reachability in
-            if reachability.connection != .none {
-                self.isReachable = true
-            }
-            else {
-                self.isReachable = false
-            }
-        }
-        
-        reachability.whenUnreachable = { reachability in
-            if reachability.connection != .none {
-                self.isReachable = true
-            }
-            else {
-                self.isReachable = false
-                if self.refreshControl.isRefreshing {
-                    self.refreshControl.endRefreshing()
-                }
-            }
-        }
-        
-        do {
-            try reachability.startNotifier()
-        } catch {
-            print("Failed to start reachability")
-        }
+        configureAndStartReachability()
         
         refreshControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
         shouldBeginRefreshing = true
@@ -70,12 +56,13 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        // Listen for failure in our AppDelegate
         NotificationCenter.default.removeObserver(self)
         NotificationCenter.default.addObserver(self, selector: #selector(failedToLoad),
                                                name: NSNotification.Name(rawValue: "failedToLoad"), object: nil)
         
         if shouldBeginRefreshing {
-            
+            // Automatically animate a refresh
             UIView.animate(withDuration: 0.3, animations: {
                 self.tableView.setContentOffset(CGPoint(x: 0, y: -1), animated: false)
                 self.tableView.setContentOffset(CGPoint(x: 0, y: 0-self.refreshControl.frame.size.height), animated: true)
@@ -97,6 +84,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         super.viewDidDisappear(true)
         refreshControl.endRefreshing()
         
+        // Deselect the item that was selected when we go to a different view controller
         guard let indexPath = tableView.indexPathForSelectedRow else {return}
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -106,11 +94,11 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         refreshControl.endRefreshing()
     }
     
+    // MARK: - Loading
+    
     @objc func loadData() {
-        
         // Load user data
         User.me(completion: doneLoadingUser(_:))
-        
     }
     
     func doneLoadingUser(_ user: User) {
@@ -150,46 +138,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
             self.refreshControl.endRefreshing()
         }
     }
-    
-    // MARK: - UITableView Data Source
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return playlists.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell", for: indexPath) as! PlaylistTableViewCell
-        
-        guard playlists.count > indexPath.row else { return cell}
-        
-        // Configure cell
-        cell.playlistTitleLabel.text = playlists[indexPath.row].name
-        let numTracks = playlists[indexPath.row].numberOfTracks ?? 0
-        cell.tracksLabel.text = "\(numTracks) Tracks"
-        
-        cell.playlistImageView.image = #imageLiteral(resourceName: "playlistPlaceholder")
-        if let imageURLString = playlists[indexPath.row].images?.last?.url,
-            let imageURL = URL(string: imageURLString) {
-            
-            let task = session.dataTask(with: URLRequest(url: imageURL)){ (data, response, error) in
-                guard let data = data else {return}
-                DispatchQueue.main.async {
-                    cell.playlistImageView.image = UIImage(data: data)
-                }
-            }
-            task.resume()
-        }
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Go to the tracks for this playlist
-        if shouldPerformSegue(withIdentifier: "toTracks", sender: self) {
-            performSegue(withIdentifier: "toTracks", sender: self)
-        }
-    }
-    
+
     @IBAction func logout(_ sender: AnyObject) {
         
         // Confirmation before logout
@@ -241,78 +190,11 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     @IBAction func unwindToPlaylistList(_ unwindSegue: UIStoryboardSegue) {
-        if let source = unwindSegue.source as? OperationViewController, let user = self.currentUser, let name = source.newPlaylistName,
-            let a = source.playlistA, let b = source.playlistB {
-            
-            shouldBeginRefreshing = true
-            // Load the tracks in playlist B
-            b.loadTracks(loaded: { (paging, tracks) in
-                guard let numberLoaded = b.tracks?.count, let numberOfTracks = b.numberOfTracks else {return}
-                
-                // If we now have all tracks
-                if numberLoaded == numberOfTracks {
-                    // Create new playlist
-                    Playlist.create(user: user, name: name, success: { playlist in
-                        
-                        // Call the callback method
-                        self.playlistWasCreated(playlist, operationToPerform: source.operationType, playlistA: a, playlistB: b)
-                    }, failure: {
-                        self.refreshControl.endRefreshing()
-                    })
-                }
-            })
+        if let source = unwindSegue.source as? OperationViewController {
+            // Perform the operation that was selected
+            // in the source view controller
+            prepareForOperation(source: source)
         }
-    }
-    
-    func playlistWasCreated(_ newPlaylist: Playlist, operationToPerform: OperationType, playlistA: Playlist, playlistB: Playlist) {
-        
-        var uris: [String] = []
-        
-        switch operationToPerform {
-        case .combine:
-            if let aUris = playlistA.urisFromTracks(), let bUris = playlistB.urisFromTracks() {
-                print("COMBINE: \(playlistA.name!) with \(playlistB.name!)")
-                uris.append(contentsOf: aUris)
-                uris.append(contentsOf: bUris)
-            }
-            break
-        case .intersect:
-            if let aUris = playlistA.urisFromTracks(), let bUris = playlistB.urisFromTracks() {
-                print("INTERSECT: \(playlistA.name!) with \(playlistB.name!)")
-                // If we find a uri that exists in A and B
-                for uri in aUris {
-                    if bUris.contains(uri) {
-                        // Append it
-                        uris.append(uri)
-                    }
-                }
-            }
-            break
-        case .subtract:
-            if let aUris = playlistA.urisFromTracks(), let bUris = playlistB.urisFromTracks() {
-                print("SUBTRACT B:\(playlistB.name!) from A: \(playlistA.name!)")
-                for uri in aUris {
-                    // If it doesn't exist in playlist B, then we can append it
-                    if bUris.contains(uri) == false {
-                        uris.append(uri)
-                    }
-                }
-            }
-            break
-        }
-        
-        // There's no need to submit the request if we don't have anything to add
-        if uris.count > 0 {
-            newPlaylist.replaceTracksWithTracks(uris: uris, replaceFinished: {
-                self.loadData()
-            }, replaceFailed: {
-                self.loadData()
-            })
-        } else {
-            loadData()
-        }
-        
-        
     }
     
 }
