@@ -13,10 +13,10 @@ import UIKit
 
 extension AppDelegate {
     func setupAppearance() {
-        UIControl.appearance().tintColor = UIColor(named: "secondary")
-        UITableView.appearance().backgroundColor = UIColor(named: "primary")
-        UITableView.appearance().separatorColor = .darkGray
-        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = UIColor(named: "secondary")
-        UIBarButtonItem.appearance().tintColor = UIColor(named: "secondary")
+        UIControl.appearance().tintColor = .fuseTint
+        UITableView.appearance().backgroundColor = .fuseBackground
+        UITableView.appearance().separatorColor = .fuseTextSecondary
+        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .fuseTint
+        UIBarButtonItem.appearance().tintColor = .fuseTint
     }
 }

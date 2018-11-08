@@ -12,6 +12,7 @@ import UIKit
 
 class StatTableViewCell: UITableViewCell {
 
+    // MARK: - Outlets
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var statLabel: UILabel!
     

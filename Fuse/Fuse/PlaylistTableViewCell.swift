@@ -12,15 +12,15 @@ import UIKit
 
 class PlaylistTableViewCell: UITableViewCell {
 
+    // MARK: - Outlets
     @IBOutlet weak var playlistTitleLabel: UILabel!
     @IBOutlet weak var tracksLabel: UILabel!
     @IBOutlet weak var playlistImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
-        selectedBackgroundView = UIView()
-        selectedBackgroundView?.backgroundColor = UIColor.darkGray
+        
+        setupSelectionView()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

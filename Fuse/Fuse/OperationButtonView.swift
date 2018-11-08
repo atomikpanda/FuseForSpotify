@@ -29,11 +29,11 @@ class OperationButtonView: UIView {
         
         if isSelected {
             // Use primary tint color
-            imageView.tintColor = UIColor(named: "secondary")
-            label.textColor = UIColor(named: "secondary")
+            imageView.tintColor = .fuseTint
+            label.textColor = .fuseTint
         } else {
-            imageView.tintColor = .white
-            label.textColor = .white
+            imageView.tintColor = .fuseTextPrimary
+            label.textColor = .fuseTextPrimary
         }
         
     }
