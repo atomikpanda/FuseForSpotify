@@ -18,6 +18,8 @@ import ObjectMapper
 
 class Paging: Mappable {
     
+    // MARK: - Variables
+    
     var items: [AnyObject]?
     var limit: Int?
     var next: String?

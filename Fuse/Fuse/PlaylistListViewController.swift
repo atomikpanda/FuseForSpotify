@@ -62,16 +62,19 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
                                                name: NSNotification.Name(rawValue: "failedToLoad"), object: nil)
         
         if shouldBeginRefreshing {
-            // Automatically animate a refresh
-            UIView.animate(withDuration: 0.3, animations: {
-                self.tableView.setContentOffset(CGPoint(x: 0, y: -1), animated: false)
-                self.tableView.setContentOffset(CGPoint(x: 0, y: 0-self.refreshControl.frame.size.height), animated: true)
-            }, completion: { _ in
-                self.refreshControl.beginRefreshing()
-                self.shouldBeginRefreshing = false
-            })
-            
+            animateRefresh()
         }
+    }
+    
+    func animateRefresh() {
+        // Automatically animate a refresh
+        UIView.animate(withDuration: 0.3, animations: {
+            self.tableView.setContentOffset(CGPoint(x: 0, y: -1), animated: false)
+            self.tableView.setContentOffset(CGPoint(x: 0, y: 0-self.refreshControl.frame.size.height), animated: true)
+        }, completion: { _ in
+            self.refreshControl.beginRefreshing()
+            self.shouldBeginRefreshing = false
+        })
     }
     
     override func viewWillDisappear(_ animated: Bool) {

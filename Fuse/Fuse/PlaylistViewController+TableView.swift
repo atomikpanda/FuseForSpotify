@@ -10,6 +10,9 @@
 
 import UIKit
 
+fileprivate let headerId = "playlistHeaderCell"
+fileprivate let cellId = "trackCell"
+
 extension PlaylistViewController {
     // MARK: - Table View Data Source
     
@@ -34,7 +37,7 @@ extension PlaylistViewController {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "trackCell") as! TrackTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as! TrackTableViewCell
         
         // Configure cell
         let track = tracks[indexPath.row]
@@ -52,43 +55,28 @@ extension PlaylistViewController {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "playlistHeaderCell") as! PlaylistHeaderViewCell
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerId) as! PlaylistHeaderViewCell
         
         header.titleLabel.text = self.playlist?.name
         header.tracksLabel.text = "\(self.tracks.count) Tracks"
         
-        if let isPublic = self.playlist?.isPublic {
-            header.privacyLabel.text = isPublic ? "Public" : "Private"
-            header.privacyImageView.image = isPublic ? #imageLiteral(resourceName: "privacyPublicIcon") : #imageLiteral(resourceName: "privacyPrivateIcon")
-        } else {
-            header.privacyLabel.text = "Private"
-            header.privacyImageView.image = #imageLiteral(resourceName: "privacyPrivateIcon")
-        }
+        header.setIsPublic(isPublic: self.playlist?.isPublic ?? false)
         
         guard header.playlistImageView.image == #imageLiteral(resourceName: "playlistPlaceholderLarge") else { return header }
         
         header.playlistImageView.image = #imageLiteral(resourceName: "playlistPlaceholderLarge")
         var imageURL: URL? = nil
-        
-        if self.playlist?.images?.count ?? 0 > 1, let imageURLString = self.playlist?.images?[1].url
-        {
-            imageURL = URL(string: imageURLString)
-            
-        } else if self.playlist?.images?.count ?? 0 > 0, let imageURLString = self.playlist?.images?.first?.url
+       
+        if let imageURLString = playlist?.getPreferredImage(ofSize: .medium)?.url
         {
             imageURL = URL(string: imageURLString)
         }
         
-        if let url = imageURL {
-            let task = session.dataTask(with: URLRequest(url: url)){ (data, response, error) in
-                guard let data = data else {return}
-                DispatchQueue.main.async {
-                    header.playlistImageView.image = UIImage(data: data)
-                }
+        UIImage.download(url: imageURL, session: session) { (image) in
+            DispatchQueue.main.async {
+                header.playlistImageView.image = image
             }
-            task.resume()
         }
-        
         
         return header
     }

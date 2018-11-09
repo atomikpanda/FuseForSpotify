@@ -20,6 +20,8 @@ import OAuthSwift
 private let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
 class AudioFeatures: Mappable {
+    
+    // MARK: - Variables
     var trackId: String?
     var danceability: Double?
     var energy: Double?

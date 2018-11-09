@@ -45,6 +45,7 @@
 		66D017462194C7F8003D3D87 /* PlaylistViewController+TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D017452194C7F8003D3D87 /* PlaylistViewController+TableView.swift */; };
 		66D017482194CC38003D3D87 /* UITableViewCell+SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D017472194CC38003D3D87 /* UITableViewCell+SelectionView.swift */; };
 		66D0174A2194CCBA003D3D87 /* UIColor+Fuse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D017492194CCBA003D3D87 /* UIColor+Fuse.swift */; };
+		66D0174E21952D72003D3D87 /* UIImage+DataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D0174D21952D72003D3D87 /* UIImage+DataTask.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +89,7 @@
 		66D017452194C7F8003D3D87 /* PlaylistViewController+TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlaylistViewController+TableView.swift"; sourceTree = "<group>"; };
 		66D017472194CC38003D3D87 /* UITableViewCell+SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+SelectionView.swift"; sourceTree = "<group>"; };
 		66D017492194CCBA003D3D87 /* UIColor+Fuse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Fuse.swift"; sourceTree = "<group>"; };
+		66D0174D21952D72003D3D87 /* UIImage+DataTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+DataTask.swift"; sourceTree = "<group>"; };
 		94EB69D145975A37518E2DA4 /* Pods-Fuse.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Fuse.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Fuse/Pods-Fuse.debug.xcconfig"; sourceTree = "<group>"; };
 		C1BD12C76A2459476B5C397E /* Pods-Fuse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Fuse.release.xcconfig"; path = "Pods/Target Support Files/Pods-Fuse/Pods-Fuse.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -174,6 +176,7 @@
 				668D327221894BC40013DA4B /* Array+Batch.swift */,
 				66D017472194CC38003D3D87 /* UITableViewCell+SelectionView.swift */,
 				66D017492194CCBA003D3D87 /* UIColor+Fuse.swift */,
+				66D0174D21952D72003D3D87 /* UIImage+DataTask.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -379,6 +382,7 @@
 				668D326F21891F330013DA4B /* Artist.swift in Sources */,
 				66D017442194BE7F003D3D87 /* PlaylistListViewController+Operation.swift in Sources */,
 				66D01710218E2AFC003D3D87 /* StatsViewController.swift in Sources */,
+				66D0174E21952D72003D3D87 /* UIImage+DataTask.swift in Sources */,
 				667714732187A06400AFDA80 /* Paging.swift in Sources */,
 				66D0171C21924DA0003D3D87 /* PlaylistHeaderViewCell.swift in Sources */,
 				6677146C2187990D00AFDA80 /* Track.swift in Sources */,

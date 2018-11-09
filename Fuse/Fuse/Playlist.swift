@@ -45,6 +45,19 @@ class Playlist: Mappable {
         isPublic <- map["public"]
     }
     
+    func getPreferredImage(ofSize size: SpotifyImageSize) -> SpotifyImage? {
+        
+        if let images = images {
+            if images.count > size.rawValue {
+                return images[size.rawValue]
+            } else {
+               return images.last
+            }
+        }
+        
+        return nil
+    }
+    
     // MARK: - Track Loading
     
     func loadTracks(loaded: @escaping (Paging, [Track]?) -> Void) {

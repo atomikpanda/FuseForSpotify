@@ -27,5 +27,10 @@ class PlaylistHeaderViewCell: UITableViewHeaderFooterView {
         // Drawing code
     }
     */
+   
+    func setIsPublic(isPublic: Bool) {
+        privacyLabel.text = isPublic ? "Public" : "Private"
+        privacyImageView.image = isPublic ? #imageLiteral(resourceName: "privacyPublicIcon") : #imageLiteral(resourceName: "privacyPrivateIcon")
+    }
 
 }

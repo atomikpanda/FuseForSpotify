@@ -11,6 +11,13 @@
 import Foundation
 import ObjectMapper
 
+// Image size
+enum SpotifyImageSize: Int {
+    case small = 2
+    case medium = 1
+    case large = 0
+}
+
 class SpotifyImage: Mappable {
     var width: Int?
     var height: Int?

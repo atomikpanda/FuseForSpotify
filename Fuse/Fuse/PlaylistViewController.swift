@@ -58,6 +58,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         let headerNib = UINib(nibName: "PlaylistHeaderView", bundle: Bundle.main)
@@ -89,6 +90,8 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
+    // MARK: - Loading
+    
     func loadData() {
         // Initiate the load
         progressView.setProgress(0, animated: false)
@@ -112,22 +115,8 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         // Update the progress bar
         if let total = self.playlist?.numberOfTracks {
             let progress = Float(self.loadingTracks.count)/Float(total)
-            DispatchQueue.main.async {
-                
-                if progress > 0 {
-                    
-                    CATransaction.begin()
-                    // Update the progress bar to 0 after animating
-                    CATransaction.setCompletionBlock {
-                        if progress == 1.0 {
-                            self.progressView.setProgress(0.0, animated: false)
-                        }
-                    }
-                    self.progressView.setProgress(progress, animated: true)
-                    CATransaction.commit()
-                    
-                }
-            }
+            
+            updateProgress(progress: progress)
         }
         
         print("loaded: \(self.loadingTracks.count) of \(playlist?.numberOfTracks ?? 0)")
@@ -155,6 +144,25 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         DispatchQueue.main.async {
             
             self.tableView.reloadData()
+        }
+    }
+    
+    func updateProgress(progress: Float) {
+        DispatchQueue.main.async {
+            
+            if progress > 0 {
+                
+                CATransaction.begin()
+                // Update the progress bar to 0 after animating
+                CATransaction.setCompletionBlock {
+                    if progress == 1.0 {
+                        self.progressView.setProgress(0.0, animated: false)
+                    }
+                }
+                self.progressView.setProgress(progress, animated: true)
+                CATransaction.commit()
+                
+            }
         }
     }
     
@@ -271,6 +279,8 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
      override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "toOperation", let nav = segue.destination as? UINavigationController, let dest = nav.topViewController as? OperationViewController {
+            
+            // Send our current playlist to the operation view
             dest.playlists = playlists
             dest.playlistA = self.playlist
         }

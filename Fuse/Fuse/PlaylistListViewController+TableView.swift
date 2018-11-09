@@ -10,6 +10,8 @@
 
 import UIKit
 
+fileprivate let cellId = "playlistCell"
+
 extension PlaylistListViewController {
     // MARK: - UITableView Data Source
     
@@ -18,7 +20,7 @@ extension PlaylistListViewController {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell", for: indexPath) as! PlaylistTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PlaylistTableViewCell
         
         guard playlists.count > indexPath.row else { return cell}
         
@@ -30,16 +32,13 @@ extension PlaylistListViewController {
         cell.playlistImageView.image = #imageLiteral(resourceName: "playlistPlaceholder")
         
         // Set up the image to load asynchronously
-        if let imageURLString = playlists[indexPath.row].images?.last?.url,
-            let imageURL = URL(string: imageURLString) {
-            
-            let task = session.dataTask(with: URLRequest(url: imageURL)){ (data, response, error) in
-                guard let data = data else {return}
+        if let imageURLString = playlists[indexPath.row].getPreferredImage(ofSize: .small)?.url
+        {
+            UIImage.download(url: URL(string: imageURLString), session: session) { (image) in
                 DispatchQueue.main.async {
-                    cell.playlistImageView.image = UIImage(data: data)
+                    cell.playlistImageView.image = image
                 }
             }
-            task.resume()
         }
         
         return cell
