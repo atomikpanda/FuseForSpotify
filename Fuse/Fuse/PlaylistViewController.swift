@@ -257,6 +257,8 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBAction func openSpotify(_ sender: AnyObject) {
+        // TODO: Open Spotify app to the current playlist
+        // maybe be using spotify's uri/url scheme?
         print("TODO: implement \(#function)")
     }
     

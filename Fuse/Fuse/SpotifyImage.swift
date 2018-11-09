@@ -19,6 +19,8 @@ enum SpotifyImageSize: Int {
 }
 
 class SpotifyImage: Mappable {
+    
+    // Instance variables
     var width: Int?
     var height: Int?
     var size: CGSize? {

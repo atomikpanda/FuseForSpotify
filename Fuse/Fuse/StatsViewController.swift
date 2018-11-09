@@ -12,7 +12,7 @@ import UIKit
 
 class StatsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    
+   // MARK: - Outlets & Vars
     @IBOutlet weak var tableView: UITableView!
     var stats: [Stat] = []
     

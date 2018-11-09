@@ -72,6 +72,7 @@ extension PlaylistViewController {
             imageURL = URL(string: imageURLString)
         }
         
+        // Load the header image
         UIImage.download(url: imageURL, session: session) { (image) in
             DispatchQueue.main.async {
                 header.playlistImageView.image = image

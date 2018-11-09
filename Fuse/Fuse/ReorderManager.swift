@@ -8,9 +8,12 @@
 // Bailey Seymour
 // DVP4 1811
 
+// TODO: Delete this file as it is no longer in use
+
 import Foundation
 import SwiftyJSON
 
+// Represents a reorderable track
 struct ReorderableTrack {
     var from: Int
     var to: Int
@@ -31,9 +34,13 @@ class ReorderManager {
     func move(track: Track, at: IndexPath,  to: IndexPath) {
         guard let trackId = track.id else {return}
         var rTrack = ReorderableTrack(from: at.row, to: to.row, trackId: trackId, cancelled: false)
+        
+        // We need to modify the index based on
+        // whether it was going back or forward
         if rTrack.to > rTrack.from {
             rTrack.to += 1
         }
+        
         tracks.append(rTrack)
     }
     
@@ -47,12 +54,14 @@ class ReorderManager {
     }
     
     func reorder() {
+        // Initiate the reorder if we have some tracks
         if tracks.count > 0 {
             requestReorder(tracks[0], indexInArray: 0, snapshotId: nil, completion: afterReorderDidSucceed(_:_:))
         }
     }
     
     private func afterReorderDidSucceed(_ indexInArray: Int, _ snapshotId: String?) {
+        // Continue in order by trying the next index
         let nextIndexToTry = indexInArray+1
         if nextIndexToTry  < self.tracks.count {
             let track = self.tracks[nextIndexToTry]
