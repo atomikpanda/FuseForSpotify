@@ -23,6 +23,14 @@ class TrackTableViewCell: UITableViewCell {
         setupSelectionView()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        trackLabel.textColor = .fuseTextPrimary
+        artistLabel.textColor = .fuseTextSecondary
+        infoLabel.textColor = .fuseTint
+        backgroundColor = .fuseCell
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

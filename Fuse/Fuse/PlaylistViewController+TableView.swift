@@ -59,6 +59,7 @@ extension PlaylistViewController {
         
         header.titleLabel.text = self.playlist?.name
         header.tracksLabel.text = "\(self.tracks.count) Tracks"
+        header.setupFuseAppearance()
         
         header.setIsPublic(isPublic: self.playlist?.isPublic ?? false)
         

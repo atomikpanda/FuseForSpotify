@@ -27,10 +27,19 @@ class PlaylistHeaderViewCell: UITableViewHeaderFooterView {
         // Drawing code
     }
     */
+    
+    func setupFuseAppearance() {
+    
+        titleLabel.textColor = .fuseTextPrimary
+        tracksLabel.textColor = .fuseTextSecondary
+        privacyLabel.textColor = .fuseTint
+        privacyImageView.tintColor = .fuseTint
+    }
    
     func setIsPublic(isPublic: Bool) {
         privacyLabel.text = isPublic ? "Public" : "Private"
         privacyImageView.image = isPublic ? #imageLiteral(resourceName: "privacyPublicIcon") : #imageLiteral(resourceName: "privacyPrivateIcon")
+        privacyImageView.tintColor = .fuseTint
     }
 
 }

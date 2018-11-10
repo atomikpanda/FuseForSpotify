@@ -15,8 +15,19 @@ extension AppDelegate {
     func setupAppearance() {
         UIControl.appearance().tintColor = .fuseTint
         UITableView.appearance().backgroundColor = .fuseBackground
-        UITableView.appearance().separatorColor = .fuseTextSecondary
+        
         UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .fuseTint
         UIBarButtonItem.appearance().tintColor = .fuseTint
+        
+        if UIColor.fuseIsDark {
+            UINavigationBar.appearance().barStyle = .black
+            UITableView.appearance().separatorColor = UIColor(hue:0.667, saturation:0.050, brightness:0.187, alpha:1.000)
+        } else {
+            UINavigationBar.appearance().barStyle = .default
+            UIVisualEffectView.appearance().effect = UIBlurEffect(style: .extraLight)
+            UIToolbar.appearance().barStyle = .default
+        }
+        
+        
     }
 }

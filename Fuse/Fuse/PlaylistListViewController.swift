@@ -53,6 +53,11 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         loadData()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupFuseAppearance()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         

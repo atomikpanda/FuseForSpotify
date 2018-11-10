@@ -25,9 +25,9 @@ extension PlaylistListViewController {
         guard playlists.count > indexPath.row else { return cell}
         
         // Configure cell
-        cell.playlistTitleLabel.text = playlists[indexPath.row].name
+        cell.playlistTitleLabel?.text = playlists[indexPath.row].name
         let numTracks = playlists[indexPath.row].numberOfTracks ?? 0
-        cell.tracksLabel.text = "\(numTracks) Tracks"
+        cell.tracksLabel?.text = "\(numTracks) Tracks"
         
         cell.playlistImageView.image = #imageLiteral(resourceName: "playlistPlaceholder")
         

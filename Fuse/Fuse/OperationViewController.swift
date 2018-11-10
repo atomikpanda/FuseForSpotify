@@ -29,6 +29,8 @@ class OperationViewController: UIViewController {
     @IBOutlet weak var playlistBButton: RoundedButton!
     @IBOutlet weak var swapButton: UIButton!
     
+    @IBOutlet weak var playlistALabel: UILabel!
+    @IBOutlet weak var playlistBLabel: UILabel!
     // All of the playlists
     var playlists: [Playlist]?
     
@@ -76,6 +78,19 @@ class OperationViewController: UIViewController {
         // Since playlistB is nil give the user the option to select
         if playlistB == nil {
             playlistBButton.setTitle("Choose Playlist...", for: .normal)
+        }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupFuseAppearance()
+        playlistALabel.textColor = .fuseTextPrimary
+        playlistBLabel.textColor = .fuseTextPrimary
+        playlistBButton.backgroundColor = .fuseTint
+        
+        if UIColor.fuseIsDark == false {
+            playlistAButton.backgroundColor = .lightGray
+            playlistAButton.setTitleColor(.white, for: .normal)
         }
     }
     

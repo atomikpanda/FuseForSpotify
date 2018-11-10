@@ -53,6 +53,11 @@ class PlaylistSelectionViewController: UIViewController, UITableViewDataSource, 
         
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupFuseAppearance()
+    }
+    
     @IBAction func cancelTapped(_ sender: AnyObject) {
         // Cancel the whole operation
         dismiss(animated: true, completion: nil)

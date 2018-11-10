@@ -400,7 +400,9 @@
                         <outlet property="combineButton" destination="GTA-hh-3vY" id="QR2-3z-6oO"/>
                         <outlet property="intersectButton" destination="KeB-SQ-gLD" id="mhE-Rc-DFn"/>
                         <outlet property="playlistAButton" destination="36f-Zx-ETN" id="djN-bg-uiq"/>
+                        <outlet property="playlistALabel" destination="gNH-LV-9Rf" id="IR0-iX-k58"/>
                         <outlet property="playlistBButton" destination="BF2-CM-Szd" id="90T-v7-yqe"/>
+                        <outlet property="playlistBLabel" destination="A0q-jl-vQl" id="TXR-3d-Oxj"/>
                         <outlet property="subtractButton" destination="pj9-PQ-xTd" id="qpv-6t-OYQ"/>
                         <outlet property="swapButton" destination="RbW-hZ-aLN" id="5OY-a6-vvl"/>
                         <segue destination="rIB-Nn-PAF" kind="presentation" identifier="toPlaylistSelection" id="Yg6-kS-FSA"/>

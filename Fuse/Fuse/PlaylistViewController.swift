@@ -81,6 +81,11 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         loadData()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupFuseAppearance()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         

@@ -11,20 +11,28 @@
 import UIKit
 
 extension UIColor {
+    static var fuseIsDark: Bool {
+        return true
+    }
     
     static var fuseTint: UIColor {
+//        return UIColor(hue:0.118, saturation:0.991, brightness:0.999, alpha:1.000)
         return UIColor(hue:0.392, saturation:0.840, brightness:0.725, alpha:1.000)
     }
     
     static var fuseBackground: UIColor {
-        return .black
+        return fuseIsDark ? .black : .white
+    }
+    
+    static var fuseCell: UIColor {
+        return fuseIsDark ? UIColor(hue:0.669, saturation:0.038, brightness:0.114, alpha:1.000) : .white
     }
     
     static var fuseTextPrimary: UIColor {
-        return UIColor(hue:0.0, saturation:0.0, brightness:1.0, alpha:1.000)
+        return fuseIsDark ? UIColor(hue:0.0, saturation:0.0, brightness:1.0, alpha:1.000) : .black
     }
     
     static var fuseTextSecondary: UIColor {
-        return UIColor(hue:0.632, saturation:0.033, brightness:0.644, alpha:1.000)
+        return fuseIsDark ? UIColor(hue:0.632, saturation:0.033, brightness:0.644, alpha:1.000) : .darkGray
     }
 }

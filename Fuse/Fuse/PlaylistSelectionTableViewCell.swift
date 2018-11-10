@@ -21,7 +21,15 @@ class PlaylistSelectionTableViewCell: UITableViewCell {
         
         setupSelectionView()
     }
-
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        playlistTitleLabel.textColor = .fuseTextPrimary
+        tracksLabel.textColor = .fuseTint
+        backgroundColor = .fuseCell
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

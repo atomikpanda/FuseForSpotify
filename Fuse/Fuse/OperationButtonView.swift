@@ -32,8 +32,14 @@ class OperationButtonView: UIView {
             imageView.tintColor = .fuseTint
             label.textColor = .fuseTint
         } else {
-            imageView.tintColor = .fuseTextPrimary
-            label.textColor = .fuseTextPrimary
+            
+            if !UIColor.fuseIsDark {
+                imageView.tintColor = .darkGray
+                label.textColor = .darkGray
+            } else {
+                imageView.tintColor = .fuseTextPrimary
+                label.textColor = .fuseTextPrimary
+            }
         }
         
     }
