@@ -34,6 +34,8 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     // For image loading
     let session = URLSession(configuration: .default)
     
+    private let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     // MARK: - View Lifecycle
     
     override func viewDidLoad() {
@@ -55,6 +57,14 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        setupFuseAppearance()
+    }
+    
+    
+    @IBAction func unwindToPlaylistsFromSettings(_ unwindSegue: UIStoryboardSegue) {
+        
+//        print("SETUP")
+        self.appDelegate.setupAppearance(nav: self.navigationController, tableView: tableView)
         setupFuseAppearance()
     }
     

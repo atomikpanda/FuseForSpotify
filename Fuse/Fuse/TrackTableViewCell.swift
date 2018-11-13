@@ -19,12 +19,12 @@ class TrackTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        setupSelectionView()
+        selectedBackgroundView = UIView()
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        setupSelectionView()
         trackLabel.textColor = .fuseTextPrimary
         artistLabel.textColor = .fuseTextSecondary
         infoLabel.textColor = .fuseTint

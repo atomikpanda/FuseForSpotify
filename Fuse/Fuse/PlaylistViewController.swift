@@ -72,10 +72,14 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         
         #if MILESTONE3
             navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "statsIcon"), style: .plain, target: self, action: #selector(openStats(_:)))
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
         #endif
         
         // Load the non-edit items
         normalToolbarItems()
+        
+        self.leftBarButtonItem?.isEnabled = false
+        self.centerBarButtonItem?.isEnabled = false
         
         // Start loading the tracks
         loadData()
@@ -83,6 +87,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        progressView.progressTintColor = .fuseTint
         setupFuseAppearance()
     }
     
@@ -147,7 +152,9 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         // Start loading the audio features for each track
         
         DispatchQueue.main.async {
-            
+           self.navigationItem.rightBarButtonItem?.isEnabled = true
+            self.leftBarButtonItem?.isEnabled = true
+            self.centerBarButtonItem?.isEnabled = true
             self.tableView.reloadData()
         }
     }
@@ -265,6 +272,18 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         // TODO: Open Spotify app to the current playlist
         // maybe be using spotify's uri/url scheme?
         print("TODO: implement \(#function)")
+        
+        if let spotifyURL = URL(string: playlist?.uri ?? "spotify:") {
+            let hasSpotifyInstalled = UIApplication.shared.canOpenURL(spotifyURL)
+            if hasSpotifyInstalled {
+                UIApplication.shared.open(spotifyURL, completionHandler: nil)
+            } else if let external = URL(string: playlist?.externalURLString ?? "") {
+                UIApplication.shared.open(external, completionHandler: nil)
+            }
+        } else if let external = URL(string: playlist?.externalURLString ?? "") {
+            UIApplication.shared.open(external, completionHandler: nil)
+        }
+        
     }
     
     func confirmDelete(onDeletePressed: @escaping () -> ()) {
@@ -290,7 +309,36 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             // Send our current playlist to the operation view
             dest.playlists = playlists
             dest.playlistA = self.playlist
+        } else if segue.identifier == "toStats", let dest = segue.destination as? StatsViewController {
+            dest.title = "\(playlist?.name ?? "Playlist") Stats"
+            dest.playlist = playlist
+            prepareStats(stats: dest)
         }
      }
+    
+    func prepareStats(stats dest: StatsViewController) {
+        dest.stats = []
+        if let tracks = playlist?.tracks {
+            let tempoMaxBpm = 180
+            
+            let tempoStat: RawStat = tracks.sumFeatures(statName: "Average Tempo", color: UIColor.fuseTint(type: .blue, isDark: true), value: {$0.tempo}) { average in
+                average/Double(tempoMaxBpm)
+            }
+            
+            dest.stats.append(tempoStat)
+            
+            let energyStat = tracks.sumFeatures(statName: "Energy Level", color: UIColor.fuseTint(type: .green, isDark: true), value: {$0.energy})
+            dest.stats.append(energyStat)
+            
+            let danceabilityStat = tracks.sumFeatures(statName: "Danceability", color: UIColor.fuseTint(type: .pink, isDark: true), value: {$0.danceability})
+            dest.stats.append(danceabilityStat)
+            
+            let instrumentalStat = tracks.sumFeatures(statName: "Instrumentalness", color: UIColor.fuseTint(type: .red, isDark: true), value: {$0.instrumentalness})
+            dest.stats.append(instrumentalStat)
+            
+            let valenceStat = tracks.sumFeatures(statName: "Valence / Cheerfulness", color: UIColor.fuseTint(type: .yellow, isDark: true), value: {$0.valence})
+            dest.stats.append(valenceStat)
+        }
+    }
 
 }

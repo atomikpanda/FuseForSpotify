@@ -20,6 +20,12 @@ class StatTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        statLabel.textColor = .fuseTextPrimary
+        backgroundColor = .fuseBackground
+    }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

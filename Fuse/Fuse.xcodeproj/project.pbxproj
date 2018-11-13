@@ -17,6 +17,10 @@
 		6677146E2187991200AFDA80 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6677146D2187991200AFDA80 /* Playlist.swift */; };
 		667714712187994F00AFDA80 /* AudioFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667714702187994F00AFDA80 /* AudioFeatures.swift */; };
 		667714732187A06400AFDA80 /* Paging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667714722187A06400AFDA80 /* Paging.swift */; };
+		66859BFB2198A7070085C187 /* UIFont+Fuse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66859BFA2198A7070085C187 /* UIFont+Fuse.swift */; };
+		66859BFD2198AF880085C187 /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66859BFC2198AF880085C187 /* Key.swift */; };
+		66859BFF2198DAF30085C187 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66859BFE2198DAF30085C187 /* SettingsViewController.swift */; };
+		66859C012198EA3B0085C187 /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66859C002198EA3B0085C187 /* ColorCollectionViewCell.swift */; };
 		668D326B2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D326A2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift */; };
 		668D326D2188E87D0013DA4B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D326C2188E87D0013DA4B /* User.swift */; };
 		668D326F21891F330013DA4B /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D326E21891F330013DA4B /* Artist.swift */; };
@@ -62,6 +66,10 @@
 		6677146D2187991200AFDA80 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		667714702187994F00AFDA80 /* AudioFeatures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFeatures.swift; sourceTree = "<group>"; };
 		667714722187A06400AFDA80 /* Paging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paging.swift; sourceTree = "<group>"; };
+		66859BFA2198A7070085C187 /* UIFont+Fuse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Fuse.swift"; sourceTree = "<group>"; };
+		66859BFC2198AF880085C187 /* Key.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
+		66859BFE2198DAF30085C187 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		66859C002198EA3B0085C187 /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCollectionViewCell.swift; sourceTree = "<group>"; };
 		668D326A2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OAuthSwiftCredential+Save.swift"; sourceTree = "<group>"; };
 		668D326C2188E87D0013DA4B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		668D326E21891F330013DA4B /* Artist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
@@ -167,6 +175,7 @@
 				667714722187A06400AFDA80 /* Paging.swift */,
 				66D01711218E2B7A003D3D87 /* Stat.swift */,
 				668D3274218B411F0013DA4B /* ReorderManager.swift */,
+				66859BFC2198AF880085C187 /* Key.swift */,
 			);
 			name = "Model Objects";
 			sourceTree = "<group>";
@@ -178,6 +187,7 @@
 				668D327221894BC40013DA4B /* Array+Batch.swift */,
 				66D017472194CC38003D3D87 /* UITableViewCell+SelectionView.swift */,
 				66D017492194CCBA003D3D87 /* UIColor+Fuse.swift */,
+				66859BFA2198A7070085C187 /* UIFont+Fuse.swift */,
 				66D0174D21952D72003D3D87 /* UIImage+DataTask.swift */,
 				66D0174F21966AC4003D3D87 /* UIViewController+FuseAppearance.swift */,
 			);
@@ -202,6 +212,7 @@
 				668D3276218CA8B30013DA4B /* OperationViewController.swift */,
 				66D01707218DDACE003D3D87 /* PlaylistSelectionViewController.swift */,
 				66D0170F218E2AFC003D3D87 /* StatsViewController.swift */,
+				66859BFE2198DAF30085C187 /* SettingsViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -214,6 +225,7 @@
 				668D3270218921E50013DA4B /* TrackTableViewCell.swift */,
 				66D0170D218E2A03003D3D87 /* StatTableViewCell.swift */,
 				66D0171B21924DA0003D3D87 /* PlaylistHeaderViewCell.swift */,
+				66859C002198EA3B0085C187 /* ColorCollectionViewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -370,8 +382,10 @@
 				667714712187994F00AFDA80 /* AudioFeatures.swift in Sources */,
 				66D017482194CC38003D3D87 /* UITableViewCell+SelectionView.swift in Sources */,
 				668D3279218CE14C0013DA4B /* OperationButtonView.swift in Sources */,
+				66859BFF2198DAF30085C187 /* SettingsViewController.swift in Sources */,
 				668D327321894BC40013DA4B /* Array+Batch.swift in Sources */,
 				66D017182191F325003D3D87 /* SpotifyImage.swift in Sources */,
+				66859BFB2198A7070085C187 /* UIFont+Fuse.swift in Sources */,
 				66D017162190F9C8003D3D87 /* AppDelegate+Appearance.swift in Sources */,
 				66AC399B2188AC98000FC6C3 /* PlaylistListViewController.swift in Sources */,
 				668D326B2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift in Sources */,
@@ -383,12 +397,14 @@
 				6677145A2187977200AFDA80 /* AppDelegate.swift in Sources */,
 				668D3277218CA8B30013DA4B /* OperationViewController.swift in Sources */,
 				66D0170E218E2A03003D3D87 /* StatTableViewCell.swift in Sources */,
+				66859BFD2198AF880085C187 /* Key.swift in Sources */,
 				668D326F21891F330013DA4B /* Artist.swift in Sources */,
 				66D017442194BE7F003D3D87 /* PlaylistListViewController+Operation.swift in Sources */,
 				66D01710218E2AFC003D3D87 /* StatsViewController.swift in Sources */,
 				66D0174E21952D72003D3D87 /* UIImage+DataTask.swift in Sources */,
 				667714732187A06400AFDA80 /* Paging.swift in Sources */,
 				66D0171C21924DA0003D3D87 /* PlaylistHeaderViewCell.swift in Sources */,
+				66859C012198EA3B0085C187 /* ColorCollectionViewCell.swift in Sources */,
 				6677146C2187990D00AFDA80 /* Track.swift in Sources */,
 				668D327C218DD2450013DA4B /* RoundedButton.swift in Sources */,
 				66D0170C218DDD73003D3D87 /* PlaylistSelectionTableViewCell.swift in Sources */,
@@ -554,7 +570,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-D\" \"MILESTONE2\"";
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-D\" \"MILESTONE2\" \"-D\" \"MILESTONE3\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.baileyseymour.Fuse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -575,7 +591,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-D\" \"MILESTONE2\"";
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-D\" \"MILESTONE2\" \"-D\" \"MILESTONE3\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.baileyseymour.Fuse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;

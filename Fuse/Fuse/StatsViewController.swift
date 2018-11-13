@@ -15,15 +15,25 @@ class StatsViewController: UIViewController, UITableViewDelegate, UITableViewDat
    // MARK: - Outlets & Vars
     @IBOutlet weak var tableView: UITableView!
     var stats: [Stat] = []
+    let session = URLSession(configuration: .default)
+    var playlist: Playlist?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        stats = [RawStat(name: "Average Tempo", percent: 0.65, color: .blue, rawValue: 112), Stat(name: "Energy Level", percent: 0.45, color: .yellow)]
+//        stats = [ Stat(name: "Energy Level", percent: 0.45, color: UIColor.fuseTint(type: .yellow, isDark: true))]
+        
+        let headerNib = UINib(nibName: "PlaylistHeaderView", bundle: Bundle.main)
+        tableView.register(headerNib, forHeaderFooterViewReuseIdentifier: "statsHeaderCell")
         
         tableView.dataSource = self
         tableView.delegate = self
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
+        setupFuseAppearance()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -49,6 +59,35 @@ class StatsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         cell.progressView.tintColor = stat.color
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "statsHeaderCell") as! PlaylistHeaderViewCell
+        
+        header.titleLabel.text = self.playlist?.name
+        header.tracksLabel.text = "\(self.playlist?.numberOfTracks ?? 0) Tracks"
+        header.setupFuseAppearance()
+        
+        header.setIsPublic(isPublic: self.playlist?.isPublic ?? false)
+        
+        guard header.playlistImageView.image == #imageLiteral(resourceName: "playlistPlaceholderLarge") else { return header }
+        
+        header.playlistImageView.image = #imageLiteral(resourceName: "playlistPlaceholderLarge")
+        var imageURL: URL? = nil
+        
+        if let imageURLString = playlist?.getPreferredImage(ofSize: .medium)?.url
+        {
+            imageURL = URL(string: imageURLString)
+        }
+        
+        // Load the header image
+        UIImage.download(url: imageURL, session: session) { (image) in
+            DispatchQueue.main.async {
+                header.playlistImageView.image = image
+            }
+        }
+        
+        return header
     }
     
     /*

@@ -20,13 +20,14 @@ class PlaylistTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        setupSelectionView()
         
+       selectedBackgroundView = UIView()
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        setupSelectionView()
         playlistTitleLabel.textColor = .fuseTextPrimary
         tracksLabel.textColor = .fuseTint
         backgroundColor = .fuseCell

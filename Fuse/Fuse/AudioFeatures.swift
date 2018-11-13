@@ -26,7 +26,8 @@ class AudioFeatures: Mappable {
     var danceability: Double?
     var energy: Double?
     var instrumentalness: Double?
-    var key: Int?
+    var key: Key?
+    var mode: Mode?
     var tempo: Double?
     var valence: Double?
     var trackUri: String?
@@ -39,6 +40,7 @@ class AudioFeatures: Mappable {
         energy <- map["energy"]
         instrumentalness <- map["instrumentalness"]
         key <- map["key"]
+        mode <- map["mode"]
         tempo <- map["tempo"]
         valence <- map["valence"]
         trackUri <- map["uri"]
@@ -90,5 +92,37 @@ class AudioFeatures: Mappable {
                 }
             }
         }
+    }
+}
+
+
+extension Array where Element == Track {
+    func sumFeatures<ReturnType>(statName: String, color: UIColor, value: (AudioFeatures)->(Double?), rawStatCalc: ((_ avg: Double)->(Double))?=nil) -> ReturnType where ReturnType : Stat {
+        
+        var totalCount: Int = 0
+        var total: Double = 0
+        
+        for track in self {
+            if let features = track.features {
+                if let doubleValue = value(features) {
+                    total += doubleValue
+                    totalCount += 1
+                }
+            }
+        }
+        
+        if totalCount == 0 {
+            totalCount = 1
+        }
+        
+        let average = total/Double(totalCount)
+        
+       if ReturnType.self == RawStat.self {
+            let calc = rawStatCalc ?? {_ in return 0}
+        
+        return RawStat(name: statName, percent: calc(average), color: color, rawValue: Int(total/Double(totalCount))) as! ReturnType
+        }
+        
+        return Stat(name: statName, percent: average, color: color) as! ReturnType
     }
 }

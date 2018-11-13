@@ -44,9 +44,25 @@ extension PlaylistViewController {
         cell.trackLabel.text = track.name
         cell.artistLabel.text = track.artists?.first?.name
         
-        // TODO: Milestone 3
+        if isRegularRegular() {
+            cell.trackLabel.font = UIFont.adjustedForFuse(regular: 17, margin: 3)
+            cell.artistLabel.font = UIFont.adjustedForFuse(regular: 18, margin: 3)
+            cell.infoLabel.font = UIFont.adjustedForFuse(regular: 17, margin: 3)
+        }
+        else {
+            cell.trackLabel.font = UIFont.adjustedForFuse(regular: 15, margin: 2)
+            cell.artistLabel.font = UIFont.adjustedForFuse(regular: 16, margin: 2)
+            cell.infoLabel.font = UIFont.adjustedForFuse(regular: 15, margin: 2)
+        }
+        
         #if MILESTONE3
-        cell.infoLabel.text = "\(Int(track.features?.tempo?.rounded() ?? 0))"
+        if let features = track.features {
+            let key = " \(features.key?.description ?? "")"
+            let mode = "\(features.mode?.description ?? "")"
+            cell.infoLabel.text = "\(Int(features.tempo?.rounded() ?? 0)) BPM\(key)\(mode)"
+        } else {
+            cell.infoLabel.text = ""
+        }
         #else
         cell.infoLabel.text = ""
         #endif
@@ -117,5 +133,28 @@ extension PlaylistViewController {
             
             
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        // Handle iPad
+        if isRegularRegular() {
+            switch UIFont.fuseFontSize {
+            case .large:
+                return 86
+            case .regular:
+                return 76
+            case .small:
+                return 66
+            }
+        } else if !isRegularRegular() && UIFont.fuseFontSize == .small {
+            return 66
+        }
+        
+        return 76
+    }
+    
+    func isRegularRegular() -> Bool {
+        return traitCollection.containsTraits(in: UITraitCollection(verticalSizeClass: .regular)) &&
+            traitCollection.containsTraits(in: UITraitCollection(horizontalSizeClass: .regular))
     }
 }

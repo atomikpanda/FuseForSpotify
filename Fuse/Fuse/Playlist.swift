@@ -30,6 +30,7 @@ class Playlist: Mappable {
     var owner: User?
     var images: [SpotifyImage]?
     var isPublic: Bool?
+    var externalURLString: String?
     
     required init?(map: Map) {
         
@@ -43,6 +44,7 @@ class Playlist: Mappable {
         owner <- map["owner"]
         images <- map["images"]
         isPublic <- map["public"]
+        externalURLString <- map["external_urls.spotify"]
     }
     
     func getPreferredImage(ofSize size: SpotifyImageSize) -> SpotifyImage? {

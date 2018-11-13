@@ -86,7 +86,6 @@
                     <blurEffect style="dark"/>
                 </visualEffectView>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="Fed-a6-NLv" firstAttribute="trailing" secondItem="k0c-4P-FB6" secondAttribute="trailing" id="2lw-cR-gzU"/>
                 <constraint firstItem="k0c-4P-FB6" firstAttribute="leading" secondItem="Fed-a6-NLv" secondAttribute="leading" id="33F-pC-SFf"/>

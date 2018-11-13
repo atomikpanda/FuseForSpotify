@@ -10,9 +10,9 @@ import UIKit
 
 extension UITableViewCell {
     func setupSelectionView() {
-        selectedBackgroundView = UIView()
+        
         if UIColor.fuseIsDark {
-            selectedBackgroundView?.backgroundColor = UIColor.darkGray
+            selectedBackgroundView?.backgroundColor = UIColor.fuseTint.withAlphaComponent(0.25)
         } else {
             selectedBackgroundView?.backgroundColor = UIColor.fuseTint.withAlphaComponent(0.5)
         }

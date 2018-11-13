@@ -29,10 +29,20 @@ extension PlaylistListViewController {
         let numTracks = playlists[indexPath.row].numberOfTracks ?? 0
         cell.tracksLabel?.text = "\(numTracks) Tracks"
         
+        if isRegularRegular() {
+            cell.playlistTitleLabel.font = UIFont.adjustedForFuse(regular: 20)
+            cell.tracksLabel.font = UIFont.adjustedForFuse(regular: 18)
+        }
+        else {
+            cell.playlistTitleLabel.font = UIFont.adjustedForFuse(regular: 17)
+            cell.tracksLabel.font = UIFont.adjustedForFuse(regular: 15)
+        }
+        
+        
         cell.playlistImageView.image = #imageLiteral(resourceName: "playlistPlaceholder")
         
         // Set up the image to load asynchronously
-        if let imageURLString = playlists[indexPath.row].getPreferredImage(ofSize: .small)?.url
+        if let imageURLString = playlists[indexPath.row].getPreferredImage(ofSize: isRegularRegular() ? .medium : .small)?.url
         {
             UIImage.download(url: URL(string: imageURLString), session: session) { (image) in
                 DispatchQueue.main.async {
@@ -49,5 +59,19 @@ extension PlaylistListViewController {
         if shouldPerformSegue(withIdentifier: "toTracks", sender: self) {
             performSegue(withIdentifier: "toTracks", sender: self)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if isRegularRegular() && UIFont.fuseFontSize != .small {
+            return 80
+        } else if !isRegularRegular() && UIFont.fuseFontSize == .small {
+            return 45
+        }
+        return 60
+    }
+    
+    func isRegularRegular() -> Bool {
+        return traitCollection.containsTraits(in: UITraitCollection(verticalSizeClass: .regular)) &&
+            traitCollection.containsTraits(in: UITraitCollection(horizontalSizeClass: .regular))
     }
 }
