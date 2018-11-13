@@ -21,6 +21,8 @@
 		66859BFD2198AF880085C187 /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66859BFC2198AF880085C187 /* Key.swift */; };
 		66859BFF2198DAF30085C187 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66859BFE2198DAF30085C187 /* SettingsViewController.swift */; };
 		66859C012198EA3B0085C187 /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66859C002198EA3B0085C187 /* ColorCollectionViewCell.swift */; };
+		66859C09219B3FF00085C187 /* FuseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66859C08219B3FF00085C187 /* FuseUITests.swift */; };
+		66859C11219B40CF0085C187 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66859C10219B40CF0085C187 /* SnapshotHelper.swift */; };
 		668D326B2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D326A2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift */; };
 		668D326D2188E87D0013DA4B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D326C2188E87D0013DA4B /* User.swift */; };
 		668D326F21891F330013DA4B /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D326E21891F330013DA4B /* Artist.swift */; };
@@ -53,6 +55,16 @@
 		66D0175021966AC4003D3D87 /* UIViewController+FuseAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D0174F21966AC4003D3D87 /* UIViewController+FuseAppearance.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		66859C0B219B3FF00085C187 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6677144E2187977100AFDA80 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 667714552187977200AFDA80;
+			remoteInfo = Fuse;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		4B4A7DCF36135063261D7539 /* Pods_Fuse.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Fuse.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		667714562187977200AFDA80 /* Fuse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fuse.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,6 +82,10 @@
 		66859BFC2198AF880085C187 /* Key.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
 		66859BFE2198DAF30085C187 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		66859C002198EA3B0085C187 /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCollectionViewCell.swift; sourceTree = "<group>"; };
+		66859C06219B3FF00085C187 /* FuseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FuseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		66859C08219B3FF00085C187 /* FuseUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuseUITests.swift; sourceTree = "<group>"; };
+		66859C0A219B3FF00085C187 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		66859C10219B40CF0085C187 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
 		668D326A2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OAuthSwiftCredential+Save.swift"; sourceTree = "<group>"; };
 		668D326C2188E87D0013DA4B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		668D326E21891F330013DA4B /* Artist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
@@ -113,6 +129,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		66859C03219B3FEF0085C187 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -129,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				667714582187977200AFDA80 /* Fuse */,
+				66859C07219B3FF00085C187 /* FuseUITests */,
 				667714572187977200AFDA80 /* Products */,
 				05B148FC6F5991577CB18BC1 /* Pods */,
 				C9462040BCC507B565F4B5ED /* Frameworks */,
@@ -139,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				667714562187977200AFDA80 /* Fuse.app */,
+				66859C06219B3FF00085C187 /* FuseUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -178,6 +203,16 @@
 				66859BFC2198AF880085C187 /* Key.swift */,
 			);
 			name = "Model Objects";
+			sourceTree = "<group>";
+		};
+		66859C07219B3FF00085C187 /* FuseUITests */ = {
+			isa = PBXGroup;
+			children = (
+				66859C08219B3FF00085C187 /* FuseUITests.swift */,
+				66859C10219B40CF0085C187 /* SnapshotHelper.swift */,
+				66859C0A219B3FF00085C187 /* Info.plist */,
+			);
+			path = FuseUITests;
 			sourceTree = "<group>";
 		};
 		668D32692188E6A50013DA4B /* Extensions */ = {
@@ -280,6 +315,24 @@
 			productReference = 667714562187977200AFDA80 /* Fuse.app */;
 			productType = "com.apple.product-type.application";
 		};
+		66859C05219B3FEF0085C187 /* FuseUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66859C0D219B3FF00085C187 /* Build configuration list for PBXNativeTarget "FuseUITests" */;
+			buildPhases = (
+				66859C02219B3FEF0085C187 /* Sources */,
+				66859C03219B3FEF0085C187 /* Frameworks */,
+				66859C04219B3FEF0085C187 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				66859C0C219B3FF00085C187 /* PBXTargetDependency */,
+			);
+			name = FuseUITests;
+			productName = FuseUITests;
+			productReference = 66859C06219B3FF00085C187 /* FuseUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -292,6 +345,10 @@
 				TargetAttributes = {
 					667714552187977200AFDA80 = {
 						CreatedOnToolsVersion = 10.0;
+					};
+					66859C05219B3FEF0085C187 = {
+						CreatedOnToolsVersion = 10.0;
+						TestTargetID = 667714552187977200AFDA80;
 					};
 				};
 			};
@@ -309,6 +366,7 @@
 			projectRoot = "";
 			targets = (
 				667714552187977200AFDA80 /* Fuse */,
+				66859C05219B3FEF0085C187 /* FuseUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -322,6 +380,13 @@
 				66D0171A21923784003D3D87 /* PlaylistHeaderView.xib in Resources */,
 				667714612187977200AFDA80 /* Assets.xcassets in Resources */,
 				6677145F2187977200AFDA80 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66859C04219B3FEF0085C187 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,7 +484,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		66859C02219B3FEF0085C187 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66859C09219B3FF00085C187 /* FuseUITests.swift in Sources */,
+				66859C11219B40CF0085C187 /* SnapshotHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		66859C0C219B3FF00085C187 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 667714552187977200AFDA80 /* Fuse */;
+			targetProxy = 66859C0B219B3FF00085C187 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		6677145D2187977200AFDA80 /* Main.storyboard */ = {
@@ -599,6 +681,44 @@
 			};
 			name = Release;
 		};
+		66859C0E219B3FF00085C187 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CMADB5PKU7;
+				INFOPLIST_FILE = FuseUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.baileyseymour.FuseUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Fuse;
+			};
+			name = Debug;
+		};
+		66859C0F219B3FF00085C187 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CMADB5PKU7;
+				INFOPLIST_FILE = FuseUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.baileyseymour.FuseUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Fuse;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -616,6 +736,15 @@
 			buildConfigurations = (
 				667714692187977200AFDA80 /* Debug */,
 				6677146A2187977200AFDA80 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		66859C0D219B3FF00085C187 /* Build configuration list for PBXNativeTarget "FuseUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66859C0E219B3FF00085C187 /* Debug */,
+				66859C0F219B3FF00085C187 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
