@@ -18,7 +18,7 @@ public enum OperationType: Int {
 }
 
 class OperationViewController: UIViewController {
-
+    
     // MARK: - Three operation buttons that act like a segemented control
     @IBOutlet weak var combineButton: OperationButtonView!
     @IBOutlet weak var intersectButton: OperationButtonView!
@@ -60,7 +60,7 @@ class OperationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Setup our segmented control buttons
         for button in [combineButton, intersectButton, subtractButton] {
             button?.setSelected(false)
@@ -157,7 +157,7 @@ class OperationViewController: UIViewController {
     @IBAction func doneTapped(_ sender: AnyObject) {
         // Next button tapped
         
-         let alert = UIAlertController(title: "Enter Playlist Name", message: "Enter the name of the new playlist that will be created.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Enter Playlist Name", message: "Enter the name of the new playlist that will be created.", preferredStyle: .alert)
         
         // Playlist title tf
         alert.addTextField { (textField) in
@@ -207,7 +207,7 @@ class OperationViewController: UIViewController {
     }
     
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Before showing the playlist selection view controller
@@ -257,5 +257,5 @@ class OperationViewController: UIViewController {
         }
         
     }
-
+    
 }

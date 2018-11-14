@@ -11,17 +11,24 @@
 import UIKit
 
 class ColorCollectionViewCell: UICollectionViewCell {
-   @IBOutlet weak var colorView: UIView!
+    @IBOutlet weak var colorView: UIView!
     
     override var isSelected: Bool {
         didSet {
+            // Show a white border when selected
             if isSelected == true {
                 colorView.layer.borderWidth = 4.0
                 colorView.layer.borderColor = UIColor.fuseTextPrimary.cgColor
             } else {
+                // Disable the white border when deselected
                 colorView.layer.borderWidth = 0.0
                 colorView.layer.borderColor = nil
             }
         }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        colorView.layer.cornerRadius = bounds.size.width / 2.0
     }
 }

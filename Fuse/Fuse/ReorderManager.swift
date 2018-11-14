@@ -85,9 +85,6 @@ class ReorderManager {
         json["range_length"] = 1
         json["insert_before"] = track.to
         
-        
-        
-
 //        if let snapshotId = snapshotId {
 //            json["snapshot_id"] = snapshotId
 //        }
@@ -114,7 +111,5 @@ class ReorderManager {
                 self.requestReorder(track, indexInArray: indexInArray, snapshotId: snapshotId, completion: completion)
             }
         }
-        
-        
     }
 }

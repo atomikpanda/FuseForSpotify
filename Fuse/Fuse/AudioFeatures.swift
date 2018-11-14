@@ -48,7 +48,7 @@ class AudioFeatures: Mappable {
     
     class func loadFeatures(for allTracks: [Track], completion: @escaping ([Track]) -> ()) {
         
-       // Split in batches of 100
+        // Split in batches of 100
         let batches = allTracks.batches(by: 100)
         
         // For each 100 tracks or 1 batch
@@ -97,6 +97,15 @@ class AudioFeatures: Mappable {
 
 
 extension Array where Element == Track {
+    
+    /// Creates a Stat or RawStat object for a specific feature in this [Track]
+    ///
+    /// - Parameters:
+    ///   - statName: The name for the Stat object eg. Energy Level
+    ///   - color: color for the Stat
+    ///   - value: The value to use in calculation which is usually the property on the AudioFeatures object we are using
+    ///   - rawStatCalc: The way to find the raw stats display value or BPM for tempo
+    /// - Returns: A new fully configured Stat or RawStat object
     func sumFeatures<ReturnType>(statName: String, color: UIColor, value: (AudioFeatures)->(Double?), rawStatCalc: ((_ avg: Double)->(Double))?=nil) -> ReturnType where ReturnType : Stat {
         
         var totalCount: Int = 0
@@ -117,10 +126,10 @@ extension Array where Element == Track {
         
         let average = total/Double(totalCount)
         
-       if ReturnType.self == RawStat.self {
+        if ReturnType.self == RawStat.self {
             let calc = rawStatCalc ?? {_ in return 0}
-        
-        return RawStat(name: statName, percent: calc(average), color: color, rawValue: Int(total/Double(totalCount))) as! ReturnType
+            
+            return RawStat(name: statName, percent: calc(average), color: color, rawValue: Int(total/Double(totalCount))) as! ReturnType
         }
         
         return Stat(name: statName, percent: average, color: color) as! ReturnType

@@ -13,6 +13,7 @@ import UIKit
 extension UITableViewCell {
     func setupSelectionView() {
         
+        // Use a different level of opacity when the user selects a cell based on theme
         if UIColor.fuseIsDark {
             selectedBackgroundView?.backgroundColor = UIColor.fuseTint.withAlphaComponent(0.25)
         } else {

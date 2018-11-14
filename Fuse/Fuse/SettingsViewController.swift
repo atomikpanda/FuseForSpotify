@@ -12,7 +12,7 @@ import UIKit
 
 class SettingsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
-    
+    // MARK: - Outlets & Vars
     @IBOutlet weak var useDarkModeSwitch: UISwitch!
     @IBOutlet weak var fontSizeSegmentedControl: UISegmentedControl!
     var selectedAccentColor = UIColor.fuseTintColorType
@@ -36,13 +36,14 @@ class SettingsViewController: UIViewController, UICollectionViewDataSource, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 6
+        return FuseTintColorType.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "colorCell", for: indexPath) as! ColorCollectionViewCell
+        
+        // Set up our collection view cell's colorView
         cell.colorView.backgroundColor = UIColor.fuseTint(type: FuseTintColorType(rawValue: indexPath.row)!)
-        cell.colorView.layer.cornerRadius = cell.bounds.size.width / 2.0
         
         if indexPath.row == UIColor.fuseTintColorType.rawValue {
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .top)
@@ -57,9 +58,11 @@ class SettingsViewController: UIViewController, UICollectionViewDataSource, UICo
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         if var selectedIndexPaths = collectionView.indexPathsForSelectedItems {
+            
             if let firstIndex = selectedIndexPaths.firstIndex(of: indexPath) {
                 selectedIndexPaths.remove(at: firstIndex)
             }
+            
             for indexPath in selectedIndexPaths {
                 guard let cell = collectionView.cellForItem(at: indexPath) else {continue}
                 cell.isSelected = false
@@ -68,23 +71,28 @@ class SettingsViewController: UIViewController, UICollectionViewDataSource, UICo
         
         guard let cell = collectionView.cellForItem(at: indexPath) else {return}
         cell.isSelected = true
+        
         if let newSelection = FuseTintColorType(rawValue: indexPath.row) {
             selectedAccentColor = newSelection
         }
     }
     
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
         if segue.identifier == "unwindToPlaylistsFromSettings" {
-            UserDefaults.standard.set(useDarkModeSwitch.isOn, forKey: "isDark")
-            UserDefaults.standard.set(fontSizeSegmentedControl.selectedSegmentIndex, forKey: "fontSize")
-            UserDefaults.standard.set(selectedAccentColor.rawValue, forKey: "tintColor")
+            saveSettings()
         }
     }
     
-
+    func saveSettings() {
+        UserDefaults.standard.set(useDarkModeSwitch.isOn, forKey: "isDark")
+        UserDefaults.standard.set(fontSizeSegmentedControl.selectedSegmentIndex, forKey: "fontSize")
+        UserDefaults.standard.set(selectedAccentColor.rawValue, forKey: "tintColor")
+    }
+    
 }

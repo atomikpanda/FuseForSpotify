@@ -11,6 +11,7 @@
 import UIKit
 
 extension UIImage {
+    /// Downloads an image using a data task
     static func download(url: URL?, session: URLSession, done: @escaping (UIImage?)->())  {
         if let url = url {
             let task = session.dataTask(with: URLRequest(url: url)){ (data, response, error) in

@@ -23,6 +23,7 @@ class StatTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        // Set up the appearance
         statLabel.textColor = .fuseTextPrimary
         backgroundColor = .fuseBackground
     }

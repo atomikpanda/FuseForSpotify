@@ -11,22 +11,22 @@
 import UIKit
 
 class PlaylistTableViewCell: UITableViewCell {
-
     // MARK: - Outlets
-    @IBOutlet weak var playlistTitleLabel: UILabel!
-    @IBOutlet weak var tracksLabel: UILabel!
-    @IBOutlet weak var playlistImageView: UIImageView!
-    
+
+    @IBOutlet var playlistTitleLabel: UILabel!
+    @IBOutlet var tracksLabel: UILabel!
+    @IBOutlet var playlistImageView: UIImageView!
+
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        
-       selectedBackgroundView = UIView()
+
+        selectedBackgroundView = UIView()
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+
+        // Configure the cell's appearance
         setupSelectionView()
         playlistTitleLabel.textColor = .fuseTextPrimary
         tracksLabel.textColor = .fuseTint
@@ -38,5 +38,4 @@ class PlaylistTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
 }

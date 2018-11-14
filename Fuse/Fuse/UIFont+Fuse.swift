@@ -10,8 +10,10 @@
 
 import UIKit
 
+/// Font Size Representation
 enum FuseFontSize : Int {
     case small = 0
+    /// Normal or Default
     case regular = 1
     case large = 2
 }
@@ -19,15 +21,13 @@ enum FuseFontSize : Int {
 extension UIFont {
     
     static var fuseFontSize: FuseFontSize {
-        if UserDefaults.standard.object(forKey: "fontSize") != nil {
-            return FuseFontSize(rawValue: UserDefaults.standard.integer(forKey: "fontSize")) ?? .regular
-        }
-        return .regular
+        return UserDefaults.standard.enumValue(forKey: "fontSize", default: .regular)
     }
     
     class func adjustedForFuse(regular: CGFloat, preference: FuseFontSize = fuseFontSize, margin: Int = 3) -> UIFont {
         var adjustment: CGFloat = 0
         
+        // Adjust based on preference
         switch preference {
         case .small:
             adjustment = CGFloat(-margin)

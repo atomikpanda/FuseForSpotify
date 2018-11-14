@@ -24,6 +24,8 @@ class TrackTableViewCell: UITableViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        // Set up the appearance
         setupSelectionView()
         trackLabel.textColor = .fuseTextPrimary
         artistLabel.textColor = .fuseTextSecondary

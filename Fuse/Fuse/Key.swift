@@ -10,6 +10,10 @@
 
 import Foundation
 
+/* See more info on pitch class notation
+ https://en.wikipedia.org/wiki/Pitch_class
+ */
+
 enum Key : Int {
     case C = 0
     case C_Sharp = 1
@@ -24,6 +28,7 @@ enum Key : Int {
     case A_Sharp = 10
     case B = 11
     
+    /// Text description like C# or D
     var description: String {
         switch self {
         case .C:
@@ -54,10 +59,12 @@ enum Key : Int {
     }
 }
 
+/// Modality of song key
 enum Mode : Int {
     case minor = 0
     case major = 1
     
+    /// Short suffix 'm' for minor and nothing for major
     var description: String {
         return self == .minor ? "m" : ""
     }

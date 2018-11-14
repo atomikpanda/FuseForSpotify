@@ -23,6 +23,7 @@
 		66859C012198EA3B0085C187 /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66859C002198EA3B0085C187 /* ColorCollectionViewCell.swift */; };
 		66859C09219B3FF00085C187 /* FuseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66859C08219B3FF00085C187 /* FuseUITests.swift */; };
 		66859C11219B40CF0085C187 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66859C10219B40CF0085C187 /* SnapshotHelper.swift */; };
+		66859C13219BA27E0085C187 /* UserDefaults+ValueOrDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66859C12219BA27E0085C187 /* UserDefaults+ValueOrDefault.swift */; };
 		668D326B2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D326A2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift */; };
 		668D326D2188E87D0013DA4B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D326C2188E87D0013DA4B /* User.swift */; };
 		668D326F21891F330013DA4B /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668D326E21891F330013DA4B /* Artist.swift */; };
@@ -86,6 +87,7 @@
 		66859C08219B3FF00085C187 /* FuseUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuseUITests.swift; sourceTree = "<group>"; };
 		66859C0A219B3FF00085C187 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		66859C10219B40CF0085C187 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
+		66859C12219BA27E0085C187 /* UserDefaults+ValueOrDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+ValueOrDefault.swift"; sourceTree = "<group>"; };
 		668D326A2188E6DB0013DA4B /* OAuthSwiftCredential+Save.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OAuthSwiftCredential+Save.swift"; sourceTree = "<group>"; };
 		668D326C2188E87D0013DA4B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		668D326E21891F330013DA4B /* Artist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 				668D327221894BC40013DA4B /* Array+Batch.swift */,
 				66D017472194CC38003D3D87 /* UITableViewCell+SelectionView.swift */,
 				66D017492194CCBA003D3D87 /* UIColor+Fuse.swift */,
+				66859C12219BA27E0085C187 /* UserDefaults+ValueOrDefault.swift */,
 				66859BFA2198A7070085C187 /* UIFont+Fuse.swift */,
 				66D0174D21952D72003D3D87 /* UIImage+DataTask.swift */,
 				66D0174F21966AC4003D3D87 /* UIViewController+FuseAppearance.swift */,
@@ -461,6 +464,7 @@
 				66D0175021966AC4003D3D87 /* UIViewController+FuseAppearance.swift in Sources */,
 				6677145A2187977200AFDA80 /* AppDelegate.swift in Sources */,
 				668D3277218CA8B30013DA4B /* OperationViewController.swift in Sources */,
+				66859C13219BA27E0085C187 /* UserDefaults+ValueOrDefault.swift in Sources */,
 				66D0170E218E2A03003D3D87 /* StatTableViewCell.swift in Sources */,
 				66859BFD2198AF880085C187 /* Key.swift in Sources */,
 				668D326F21891F330013DA4B /* Artist.swift in Sources */,

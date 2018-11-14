@@ -24,6 +24,7 @@ class PlaylistSelectionTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        // Set up appearance for the cell
         setupSelectionView()
         playlistTitleLabel.textColor = .fuseTextPrimary
         tracksLabel.textColor = .fuseTint

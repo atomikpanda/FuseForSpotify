@@ -269,18 +269,20 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBAction func openSpotify(_ sender: AnyObject) {
-        // TODO: Open Spotify app to the current playlist
-        // maybe be using spotify's uri/url scheme?
-        print("TODO: implement \(#function)")
         
+        // If we don't have a uri just use the base spotify one
         if let spotifyURL = URL(string: playlist?.uri ?? "spotify:") {
+            
+            // See if we can open spotify: uris
             let hasSpotifyInstalled = UIApplication.shared.canOpenURL(spotifyURL)
             if hasSpotifyInstalled {
                 UIApplication.shared.open(spotifyURL, completionHandler: nil)
             } else if let external = URL(string: playlist?.externalURLString ?? "") {
+                // Fallback to open.spotify.com
                 UIApplication.shared.open(external, completionHandler: nil)
             }
         } else if let external = URL(string: playlist?.externalURLString ?? "") {
+            // If the url is not a valid url try the external url
             UIApplication.shared.open(external, completionHandler: nil)
         }
         
@@ -318,15 +320,20 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     
     func prepareStats(stats dest: StatsViewController) {
         dest.stats = []
+        
+        // Make sure we have stats
         if let tracks = playlist?.tracks {
+            
+            // Proprietary max bpm used for percent calculation
             let tempoMaxBpm = 180
             
             let tempoStat: RawStat = tracks.sumFeatures(statName: "Average Tempo", color: UIColor.fuseTint(type: .blue, isDark: true), value: {$0.tempo}) { average in
+                // The percent calculation
                 average/Double(tempoMaxBpm)
             }
             
             dest.stats.append(tempoStat)
-            
+           
             let energyStat = tracks.sumFeatures(statName: "Energy Level", color: UIColor.fuseTint(type: .green, isDark: true), value: {$0.energy})
             dest.stats.append(energyStat)
             

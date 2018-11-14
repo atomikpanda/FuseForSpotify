@@ -19,17 +19,9 @@ class PlaylistHeaderViewCell: UITableViewHeaderFooterView {
     @IBOutlet weak var privacyImageView: UIImageView!
     @IBOutlet weak var playlistImageView: UIImageView!
     @IBOutlet weak var visualEffectView: UIVisualEffectView!
-    
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-    
+
     func setupFuseAppearance() {
-    
+        // Set up the header's appearance
         titleLabel.textColor = .fuseTextPrimary
         tracksLabel.textColor = .fuseTextSecondary
         privacyLabel.textColor = .fuseTint
@@ -37,6 +29,7 @@ class PlaylistHeaderViewCell: UITableViewHeaderFooterView {
     }
    
     func setIsPublic(isPublic: Bool) {
+        // Configure the header
         privacyLabel.text = isPublic ? "Public" : "Private"
         privacyImageView.image = isPublic ? #imageLiteral(resourceName: "privacyPublicIcon") : #imageLiteral(resourceName: "privacyPrivateIcon")
         privacyImageView.tintColor = .fuseTint

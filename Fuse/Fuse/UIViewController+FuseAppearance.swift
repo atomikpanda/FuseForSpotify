@@ -11,6 +11,7 @@
 import UIKit
 
 extension UIViewController {
+    /// Configure a UIViewController to use fuse's theme methods
     func setupFuseAppearance() {
         view.backgroundColor = .fuseBackground
     }

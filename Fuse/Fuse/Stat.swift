@@ -10,7 +10,9 @@
 
 import UIKit
 
+/// Stat for percent based items
 class Stat {
+    // MARK: - Instance variable
     var name: String
     var percent: Double
     var color: UIColor
@@ -23,6 +25,7 @@ class Stat {
     }
 }
 
+/// Stat for things that show the raw amount rather than a percent
 class RawStat: Stat {
     var rawValue: Int
     

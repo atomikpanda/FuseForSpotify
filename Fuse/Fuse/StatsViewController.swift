@@ -12,7 +12,7 @@ import UIKit
 
 class StatsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-   // MARK: - Outlets & Vars
+    // MARK: - Outlets & Vars
     @IBOutlet weak var tableView: UITableView!
     var stats: [Stat] = []
     let session = URLSession(configuration: .default)
@@ -21,7 +21,7 @@ class StatsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        stats = [ Stat(name: "Energy Level", percent: 0.45, color: UIColor.fuseTint(type: .yellow, isDark: true))]
+        //        stats = [ Stat(name: "Energy Level", percent: 0.45, color: UIColor.fuseTint(type: .yellow, isDark: true))]
         
         let headerNib = UINib(nibName: "PlaylistHeaderView", bundle: Bundle.main)
         tableView.register(headerNib, forHeaderFooterViewReuseIdentifier: "statsHeaderCell")
@@ -41,7 +41,7 @@ class StatsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       let cell = tableView.dequeueReusableCell(withIdentifier: "statCell", for: indexPath) as! StatTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "statCell", for: indexPath) as! StatTableViewCell
         
         let stat = stats[indexPath.row]
         

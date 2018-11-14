@@ -12,37 +12,60 @@ import Foundation
 import UIKit
 
 extension AppDelegate {
-    func setupAppearance(nav: UINavigationController?=nil, tableView: UITableView?=nil) {
+    
+    /// Load the initial theme for the application
+    func setupAppearance(nav: UINavigationController?=nil, tableView currentTableView: UITableView?=nil) {
         
-        UIControl.appearance().tintColor = .fuseTint
-        UISwitch.appearance().onTintColor = .fuseTint
-        UITableView.appearance().backgroundColor = .fuseBackground
-        tableView?.backgroundColor = .fuseBackground
-        UILabel.appearance(whenContainedInInstancesOf: [SettingsViewController.self]).textColor = .fuseTextPrimary
+        // Get all appearance proxy objects
+        let control = UIControl.appearance()
+        let switches = UISwitch.appearance()
+        let tableViewAppearance = UITableView.appearance()
+        let viewInAlerts = UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self])
+        let navbar = UINavigationBar.appearance()
+        let blurView = UIVisualEffectView.appearance(whenContainedInInstancesOf: [PlaylistHeaderViewCell.self])
+        let toolbar = UIToolbar.appearance()
+        let separatorColor = UIColor(hue:0.667, saturation:0.050, brightness:0.187, alpha:1.000)
         
-        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .fuseTint(type: UIColor.fuseTintColorType, isDark: false)
+        // General UI Elements
+        control.tintColor = .fuseTint
+        switches.onTintColor = .fuseTint
+        viewInAlerts.tintColor = .fuseTint(type: UIColor.fuseTintColorType, isDark: false)
         UIBarButtonItem.appearance().tintColor = .fuseTint
         
+        // Table Views
+        tableViewAppearance.backgroundColor = .fuseBackground
+        currentTableView?.backgroundColor = .fuseBackground
+        
+        // Settings view controller
+        UILabel.appearance(whenContainedInInstancesOf: [SettingsViewController.self]).textColor = .fuseTextPrimary
+        
         if UIColor.fuseIsDark {
-            UINavigationBar.appearance().barStyle = .black
-            UIToolbar.appearance().barStyle = .black
-            UITableView.appearance().separatorColor = UIColor(hue:0.667, saturation:0.050, brightness:0.187, alpha:1.000)
-            tableView?.separatorColor = UIColor(hue:0.667, saturation:0.050, brightness:0.187, alpha:1.000)
-            
-            UIVisualEffectView.appearance(whenContainedInInstancesOf: [PlaylistHeaderViewCell.self]).effect = UIBlurEffect(style: .dark)
-            
+            // Configure navbar style
+            navbar.barStyle = .black
             nav?.navigationBar.barStyle = .black
-        } else {
-            UINavigationBar.appearance().barStyle = .default
-            UIVisualEffectView.appearance(whenContainedInInstancesOf: [PlaylistHeaderViewCell.self]).effect = UIBlurEffect(style: .extraLight)
-            UIToolbar.appearance().barStyle = .default
-            UITableView.appearance().separatorColor = nil
-            tableView?.separatorColor = nil
+            toolbar.barStyle = .black
             
+            blurView.effect = UIBlurEffect(style: .dark)
+            
+            // TableView
+            tableViewAppearance.separatorColor = separatorColor
+            currentTableView?.separatorColor = separatorColor
+        
+        } else {
+            // Navbar style light
+            navbar.barStyle = .default
             nav?.navigationBar.barStyle = .default
+            toolbar.barStyle = .default
+            
+            blurView.effect = UIBlurEffect(style: .extraLight)
+            
+            // TableView
+            tableViewAppearance.separatorColor = nil
+            currentTableView?.separatorColor = nil
         }
         
-        tableView?.reloadData()
+        // Finally reload
+        currentTableView?.reloadData()
         
     }
 }
