@@ -29,6 +29,7 @@ class ColorCollectionViewCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        // Make the cells circular
         colorView.layer.cornerRadius = bounds.size.width / 2.0
     }
 }

@@ -21,11 +21,11 @@ class StatsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //        stats = [ Stat(name: "Energy Level", percent: 0.45, color: UIColor.fuseTint(type: .yellow, isDark: true))]
-        
+        // Register our header
         let headerNib = UINib(nibName: "PlaylistHeaderView", bundle: Bundle.main)
         tableView.register(headerNib, forHeaderFooterViewReuseIdentifier: "statsHeaderCell")
         
+        // Setup tableView
         tableView.dataSource = self
         tableView.delegate = self
     }
@@ -46,9 +46,13 @@ class StatsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let stat = stats[indexPath.row]
         
         if let rawStat = stat as? RawStat {
+            // Use raw stat for tempo
             cell.statLabel.text = "\(rawStat.name): \(rawStat.rawValue)\(rawStat.suffix)"
         } else {
+            // Use percent format
             var percent = Int(stat.percent*100.0)
+            
+            // if percent is somehow greater cap it at 100
             if percent > 100 {
                 percent = 100
             }
@@ -89,15 +93,5 @@ class StatsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         return header
     }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
     
 }

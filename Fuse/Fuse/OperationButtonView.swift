@@ -34,6 +34,7 @@ class OperationButtonView: UIView {
         } else {
             
             if !UIColor.fuseIsDark {
+                // Make sure we can read the non-selected items when in light mode
                 imageView.tintColor = .darkGray
                 label.textColor = .darkGray
             } else {

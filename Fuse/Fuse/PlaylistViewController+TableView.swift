@@ -44,7 +44,8 @@ extension PlaylistViewController {
         cell.trackLabel.text = track.name
         cell.artistLabel.text = track.artists?.first?.name
         
-        if isRegularRegular() {
+        // Use different font size for iPads
+        if traitCollection.isRegularRegular {
             cell.trackLabel.font = UIFont.adjustedForFuse(regular: 17, margin: 3)
             cell.artistLabel.font = UIFont.adjustedForFuse(regular: 18, margin: 3)
             cell.infoLabel.font = UIFont.adjustedForFuse(regular: 17, margin: 3)
@@ -137,7 +138,7 @@ extension PlaylistViewController {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         // Handle iPad
-        if isRegularRegular() {
+        if traitCollection.isRegularRegular {
             switch UIFont.fuseFontSize {
             case .large:
                 return 86
@@ -146,15 +147,11 @@ extension PlaylistViewController {
             case .small:
                 return 66
             }
-        } else if !isRegularRegular() && UIFont.fuseFontSize == .small {
+        } else if !traitCollection.isRegularRegular && UIFont.fuseFontSize == .small {
             return 66
         }
         
         return 76
     }
     
-    func isRegularRegular() -> Bool {
-        return traitCollection.containsTraits(in: UITraitCollection(verticalSizeClass: .regular)) &&
-            traitCollection.containsTraits(in: UITraitCollection(horizontalSizeClass: .regular))
-    }
 }

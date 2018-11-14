@@ -61,6 +61,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         
         super.viewDidLoad()
         
+        // Register our header
         let headerNib = UINib(nibName: "PlaylistHeaderView", bundle: Bundle.main)
         tableView.register(headerNib, forHeaderFooterViewReuseIdentifier: "playlistHeaderCell")
         
@@ -326,6 +327,8 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             
             // Proprietary max bpm used for percent calculation
             let tempoMaxBpm = 180
+            
+            // MARK: - Create all of the stats objects
             
             let tempoStat: RawStat = tracks.sumFeatures(statName: "Average Tempo", color: UIColor.fuseTint(type: .blue, isDark: true), value: {$0.tempo}) { average in
                 // The percent calculation

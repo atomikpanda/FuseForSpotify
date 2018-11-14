@@ -20,7 +20,7 @@ class SettingsViewController: UIViewController, UICollectionViewDataSource, UICo
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
+        // Load settings
         fontSizeSegmentedControl.selectedSegmentIndex = UIFont.fuseFontSize.rawValue
         useDarkModeSwitch.setOn(UIColor.fuseIsDark, animated: false)
         selectedAccentColor = UIColor.fuseTintColorType
@@ -59,19 +59,23 @@ class SettingsViewController: UIViewController, UICollectionViewDataSource, UICo
         
         if var selectedIndexPaths = collectionView.indexPathsForSelectedItems {
             
+            // Remove our new selected index path before we deselect all selected
             if let firstIndex = selectedIndexPaths.firstIndex(of: indexPath) {
                 selectedIndexPaths.remove(at: firstIndex)
             }
             
+            // Deselect all but the one just now
             for indexPath in selectedIndexPaths {
                 guard let cell = collectionView.cellForItem(at: indexPath) else {continue}
                 cell.isSelected = false
             }
         }
         
+        // Select the new cell
         guard let cell = collectionView.cellForItem(at: indexPath) else {return}
         cell.isSelected = true
         
+        // Save the tint color
         if let newSelection = FuseTintColorType(rawValue: indexPath.row) {
             selectedAccentColor = newSelection
         }
@@ -89,6 +93,7 @@ class SettingsViewController: UIViewController, UICollectionViewDataSource, UICo
         }
     }
     
+    /// Save to user defaults only on save (not cancel)
     func saveSettings() {
         UserDefaults.standard.set(useDarkModeSwitch.isOn, forKey: "isDark")
         UserDefaults.standard.set(fontSizeSegmentedControl.selectedSegmentIndex, forKey: "fontSize")

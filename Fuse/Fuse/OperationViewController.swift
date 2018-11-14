@@ -83,6 +83,8 @@ class OperationViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        // Support appearance and improve readability
         setupFuseAppearance()
         playlistALabel.textColor = .fuseTextPrimary
         playlistBLabel.textColor = .fuseTextPrimary

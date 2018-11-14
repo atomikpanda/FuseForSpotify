@@ -10,7 +10,7 @@
 
 import UIKit
 
-// Hues
+// Ordered Hues
 fileprivate let fuseTintHues: [CGFloat] = [
     0.392, 0.58333, 0.8777, 0.997222222, 0.168, 0.513888889
 ]

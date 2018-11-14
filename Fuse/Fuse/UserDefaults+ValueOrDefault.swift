@@ -25,6 +25,7 @@ extension UserDefaults {
 
     /// Gets a bool value from user defaults but if one does not exist the default value is used.
     func bool(forKey key: String, default defaultValue: Bool) -> Bool {
+        
         if object(forKey: key) != nil {
             return bool(forKey: key)
         }

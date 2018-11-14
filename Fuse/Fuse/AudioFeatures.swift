@@ -120,6 +120,7 @@ extension Array where Element == Track {
             }
         }
         
+        // Avoid DIV0 crash
         if totalCount == 0 {
             totalCount = 1
         }
