@@ -151,6 +151,10 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         self.playlists = loadingPlaylists
         self.loadingPlaylists.removeAll()
         
+        // Fixed when loading finishes before viewDidAppear
+        // (user doesn't have many playlists and a fast connection)
+        shouldBeginRefreshing = false
+        
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.refreshControl.endRefreshing()
