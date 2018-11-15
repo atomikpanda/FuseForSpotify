@@ -49,7 +49,7 @@ class User: Mappable {
                     }
                 }
             } catch {
-                print("JSON ERROR: \(error.localizedDescription)")
+                BSLog.E("JSON ERROR: \(error.localizedDescription)")
             }
 
         }) { error in

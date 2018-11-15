@@ -121,7 +121,7 @@ class Playlist: Mappable {
             }
             
         } catch {
-            print("JSON ERROR: \(error.localizedDescription)")
+            BSLog.E("JSON ERROR: \(error.localizedDescription)")
         }
     }
     
@@ -222,7 +222,7 @@ class Playlist: Mappable {
             }
             
         } catch {
-            print("JSON ERROR: \(error.localizedDescription)")
+            BSLog.E("JSON ERROR: \(error.localizedDescription)")
         }
     }
     
@@ -260,7 +260,7 @@ class Playlist: Mappable {
         
         // Debug print
         let requestData = json
-        print("\n\n"+requestData.description+"\n\n")
+        BSLog.D("\n\n"+requestData.description+"\n\n")
         
         
         _ = appDelegate.oauthswift!.client.request("https://api.spotify.com/v1/playlists/\(playlistId)/tracks", method: .PUT,
@@ -346,7 +346,7 @@ class Playlist: Mappable {
                                                         }
                                                         
                                                     } catch {
-                                                        print("JSON ERROR: \(error.localizedDescription)")
+                                                        BSLog.E("JSON ERROR: \(error.localizedDescription)")
                                                     }
         }) { (error) in
             if case .tokenExpired = error {

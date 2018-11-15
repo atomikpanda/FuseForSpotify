@@ -130,7 +130,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             updateProgress(progress: progress)
         }
         
-        print("loaded: \(self.loadingTracks.count) of \(playlist?.numberOfTracks ?? 0)")
+        BSLog.D("loaded: \(self.loadingTracks.count) of \(playlist?.numberOfTracks ?? 0)")
         
         // Check if we are done loading everything
         if self.loadingTracks.count == self.playlist?.numberOfTracks ?? 0 {

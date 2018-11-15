@@ -96,8 +96,13 @@ class SettingsViewController: UIViewController, UICollectionViewDataSource, UICo
     /// Save to user defaults only on save (not cancel)
     func saveSettings() {
         UserDefaults.standard.set(useDarkModeSwitch.isOn, forKey: "isDark")
+        BSLog.D("Dark Mode: \(useDarkModeSwitch.isOn ? "Enabled" : "Disabled")")
+        
         UserDefaults.standard.set(fontSizeSegmentedControl.selectedSegmentIndex, forKey: "fontSize")
+        BSLog.D("Font Size: \(UIFont.fuseFontSize)")
+        
         UserDefaults.standard.set(selectedAccentColor.rawValue, forKey: "tintColor")
+        BSLog.D("Accent Color: \(selectedAccentColor)")
     }
     
 }

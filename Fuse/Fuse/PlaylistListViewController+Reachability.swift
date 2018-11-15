@@ -40,7 +40,7 @@ extension PlaylistListViewController {
         do {
             try reachability.startNotifier()
         } catch {
-            print("Failed to start reachability")
+            BSLog.E("Failed to start reachability")
         }
     }
 }

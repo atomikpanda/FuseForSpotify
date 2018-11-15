@@ -33,7 +33,7 @@ extension PlaylistViewController {
         // We need to update the remote data source when the user presses done or back
         self.needsToUpdateRemote = true
         
-        print("index: \(sourceIndexPath.row) to \(destinationIndexPath.row)")
+        BSLog.D("index: \(sourceIndexPath.row) to \(destinationIndexPath.row)")
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -118,8 +118,8 @@ extension PlaylistViewController {
             playlist?.deleteTracks([trackAtPosition], completion: {
                 // Deleted successfully from remote server
                 
-                print("deleted...")
-                
+                BSLog.D("deleted...")
+               
                 // Remove it from our data model
                 self.tracks.remove(at: indexPath.row)
                 self.playlist?.tracks = self.tracks

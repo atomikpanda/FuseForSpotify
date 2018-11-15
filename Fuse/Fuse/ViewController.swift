@@ -48,13 +48,13 @@ class ViewController: UIViewController {
                              parameters: params, headers: nil,
                              success: authorizationDidSucceed(_:_:_:),
                              failure: { error in
-                                print(error.localizedDescription)
+                                BSLog.E(error.localizedDescription)
         })
         
     }
     
     func authorizationDidSucceed(_ credential: OAuthSwiftCredential, _ response: OAuthSwiftResponse?, _ parameters: OAuthSwift.Parameters) {
-        print(credential.oauthToken)
+        BSLog.D(credential.oauthToken)
         
         // Save tokens for next launch
         credential.save()
@@ -72,9 +72,9 @@ class ViewController: UIViewController {
         formatter.timeStyle = .medium
         
         if let expiration = credential.oauthTokenExpiresAt {
-            print("DATE FOR EXPIRATION: \(formatter.string(from: expiration))")
+            BSLog.D("DATE FOR EXPIRATION: \(formatter.string(from: expiration))")
         } else {
-            print("EXPIRATION WAS NIL")
+            BSLog.E("EXPIRATION WAS NIL")
         }
     }
     

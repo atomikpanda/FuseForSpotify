@@ -108,7 +108,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     @objc func failedToLoad() {
-        print("received")
+        BSLog.D("received")
         refreshControl.endRefreshing()
     }
     
@@ -155,6 +155,7 @@ class PlaylistListViewController: UIViewController, UITableViewDelegate, UITable
         // (user doesn't have many playlists and a fast connection)
         shouldBeginRefreshing = false
         
+        BSLog.D("Loaded all playlists")
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.refreshControl.endRefreshing()

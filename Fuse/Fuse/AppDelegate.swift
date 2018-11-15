@@ -20,10 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var alert: UIAlertController?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         // Create our authentication manager
         setupOAuth()
-
+        
         // Customize UIKit appearance
         setupAppearance()
 
@@ -65,7 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func oauthErrorHandler(error: OAuthSwiftError, afterRefresh: (()->())?=nil) {
         
         // An error occurred with the request
-        print("OAUTH Request Error: \(error.localizedDescription)")
+        BSLog.E("OAUTH Request Error: \(error.localizedDescription)")
         
         // Get the error details
         if case .requestError = error,
@@ -99,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 // Done. notify that the token was renewed
                 afterRefresh?()
             }) { (error) in
-                print("Error refreshing token: \(error.localizedDescription)")
+                BSLog.E("Error refreshing token: \(error.localizedDescription)")
             }
         }
     }
