@@ -44,10 +44,10 @@ There may also be warnings inside of third-party libraries.
 
 ### Screen Shots
 
-![iPhone 8-01Stats](readme_assets/iPhone 8-01Stats.png?raw=true "iPhone 8-01Stats")
+![iPhone 8-01Stats](readme_assets/01.png?raw=true "iPhone 8-01Stats")
 
-![iPhone 8-02Operations](readme_assets/iPhone 8-02Operations.png?raw=true "iPhone 8-02Operations")
+![iPhone 8-02Operations](readme_assets/02.png?raw=true "iPhone 8-02Operations")
 
-![iPhone 8-03Tracks](readme_assets/iPhone 8-03Tracks.png?raw=true "iPhone 8-03Tracks")
+![iPhone 8-03Tracks](readme_assets/03.png?raw=true "iPhone 8-03Tracks")
 
-![iPhone 8-04Playlists](readme_assets/iPhone 8-04Playlists.png?raw=true "iPhone 8-04Playlists")
+![iPhone 8-04Playlists](readme_assets/04.png?raw=true "iPhone 8-04Playlists")
