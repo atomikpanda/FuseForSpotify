@@ -35,11 +35,11 @@ class FuseUITests: XCTestCase {
         let app = XCUIApplication()
         let tablesQuery = app.tables
         snapshot("04Playlists", timeWaitingForIdle: 2)
-        tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["52 Tracks"]/*[[".cells.staticTexts[\"52 Tracks\"]",".staticTexts[\"52 Tracks\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        tablesQuery.staticTexts["40 Tracks"].tap()
         snapshot("03Tracks", timeWaitingForIdle: 2)
         app.navigationBars["Fuse.PlaylistView"].buttons["statsIcon"].tap()
         snapshot("01Stats", timeWaitingForIdle: 2)
-        app.navigationBars["FSOE & Uplifting Stats"].buttons["Playlist"].tap()
+        app.navigationBars["Deep Chill Stats"].buttons["Playlist"].tap()
         app.toolbars["Toolbar"].buttons["operationIcon"].tap()
         app.staticTexts["Intersect"].tap()
         app.buttons["Choose Playlist..."].tap()
